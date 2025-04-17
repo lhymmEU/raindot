@@ -9,7 +9,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-gray-100">
       <Header />
       <main className="flex-grow">
-        <Hero />
+        <Hero title="THE PORTAL" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod" buttonOneText="Get Started" buttonTwoText="Explore" />
         <CardGrid />
         <ChatSection />
       </main>

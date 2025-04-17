@@ -43,14 +43,32 @@ export default function JAM() {
     {
       name: "JAM Chat",
       url: "#",
-    },   
+    },
+  ];
+
+  const cards = [
+    {
+      title: "JAM",
+      descriptionTop: "ONE LINER",
+      descriptionBottom: "ONE LINER",
+    },
+    {
+      title: "BUILD",
+      descriptionTop: "ONE LINER",
+      descriptionBottom: "ONE LINER",
+    },
+    {
+      title: "EARN",
+      descriptionTop: "ONE LINER",
+      descriptionBottom: "ONE LINER",
+    },
   ];
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <Header />
       <main className="flex-grow">
         <VideoCarousel videos={videoData} />
-        <CardGrid />
+        <CardGrid cards={cards} />
         <Links header="READ" links={readLinks} />
         <Links header="CHAT" links={chatLinks} />
       </main>
