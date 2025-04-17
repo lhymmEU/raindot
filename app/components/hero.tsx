@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export default function Hero() {
   return (
-    <section className="py-16 text-center px-4 border-t border-b">
+    <section className="py-16 text-center px-4 border-b">
       <h1 className="text-[80px] font-[700] tracking-tight mb-6">THE PORTAL</h1>
       <p className="text-[44px] font-[500] max-w-3xl mx-auto mb-10 uppercase tracking-wide leading-none">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod

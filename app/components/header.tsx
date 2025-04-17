@@ -7,7 +7,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="p-6 flex justify-between items-center">
+    <header className="p-6 flex justify-between items-center border-b border-black">
       <Image
         src="/polkadot-logo.svg"
         alt="Raindot Logo"

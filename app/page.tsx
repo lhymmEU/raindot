@@ -1,6 +1,6 @@
 import Header from "@/app/components/header"
 import Hero from "@/app/components/hero"
-import CardGrid from "@/app/components/card-grid"
+import CardGrid from "@/app/components/card-grid-two"
 import ChatSection from "@/app/components/chat-section"
 import Footer from "@/app/components/footer"
 
