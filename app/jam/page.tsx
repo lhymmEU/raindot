@@ -51,16 +51,19 @@ export default function JAM() {
       title: "JAM",
       descriptionTop: "ONE LINER",
       descriptionBottom: "ONE LINER",
+      link: "#",
     },
     {
       title: "BUILD",
       descriptionTop: "ONE LINER",
       descriptionBottom: "ONE LINER",
+      link: "#",
     },
     {
       title: "EARN",
       descriptionTop: "ONE LINER",
       descriptionBottom: "ONE LINER",
+      link: "#",
     },
   ];
   return (

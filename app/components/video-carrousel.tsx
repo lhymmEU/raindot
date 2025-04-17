@@ -1,10 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { YouTubeEmbed } from "@next/third-parties/google";
-
-import { Button } from "@/components/ui/button";
 
 interface Video {
   id: string;
@@ -19,18 +16,6 @@ export default function VideoCarousel({
   videos = defaultVideos,
 }: VideoCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const handlePrevious = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? videos.length - 1 : prevIndex - 1
-    );
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === videos.length - 1 ? 0 : prevIndex + 1
-    );
-  };
 
   return (
     <div className="w-full flex justify-center items-center py-4 border-b border-black">

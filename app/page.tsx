@@ -10,21 +10,25 @@ export default function Home() {
       title: "JAM",
       descriptionTop: "ONE LINER",
       descriptionBottom: "ONE LINER",
+      link: "/jam",
     },
     {
       title: "BUILD",
       descriptionTop: "ONE LINER",
       descriptionBottom: "ONE LINER",
+      link: "/build",
     },
     {
       title: "EARN",
       descriptionTop: "ONE LINER",
       descriptionBottom: "ONE LINER",
+      link: "/earn",
     },
     {
       title: "LEARN",
       descriptionTop: "ONE LINER",
       descriptionBottom: "ONE LINER",
+      link: "/learn",
     },
   ];
   return (

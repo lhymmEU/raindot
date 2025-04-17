@@ -9,21 +9,25 @@ export default function Learn() {
       title: "GET STARTED",
       descriptionTop: "BUILD NOW",
       descriptionBottom: " ",
+      link: "#",
     },
     {
       title: "W3F SUPPORT",
       descriptionTop: "GOT STUCK?",
       descriptionBottom: "GET HELP",
+      link: "#",
     },
     {
       title: "ON/OFF RAMP",
       descriptionTop: "BUILD NOW",
       descriptionBottom: " ",
+      link: "#",
     },
     {
       title: "PBA",
       descriptionTop: "FORMAL",
       descriptionBottom: "EDUCATION",
+      link: "#",
     },
   ];
   return (

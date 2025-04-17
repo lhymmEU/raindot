@@ -1,5 +1,3 @@
-import Link from "next/link"
-
 interface HeroProps {
   title: string;
   description: string;

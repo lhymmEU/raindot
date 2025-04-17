@@ -8,16 +8,19 @@ export default function Build() {
       title: "DOCS",
       descriptionTop: "BUILD NOW",
       descriptionBottom: "",
+      link: "#",
     },
     {
       title: "STACK XCHANGE",
       descriptionTop: "GOT STUCK?",
       descriptionBottom: "GET HELP",
+      link: "#",
     },
     {
       title: "SUPPORT",
       descriptionTop: "GENERAL",
       descriptionBottom: "INFO",
+      link: "#",
     },
   ];
   return (
