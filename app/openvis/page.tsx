@@ -3,16 +3,14 @@ import Hero from "@/app/components/hero";
 import Footer from "@/app/components/footer";
 import VoterChart from "@/app/openvis/voter-chart";
 
+export const dynamic = 'force-dynamic'; // Prevent static generation
+
 export default async function OpenVis() {
-  // Set base URL based on environment
-  const baseUrl = process.env.NODE_ENV === "development" 
-    ? "http://localhost:3000" 
-    : "https://raindot.vercel.app";
   
   let data = { data: [] };
   
   try {
-    const response = await fetch(`${baseUrl}/api/dune`);
+    const response = await fetch(`https://raindot.vercel.app/api/dune`);
     if (!response.ok) throw new Error(`Error: ${response.status}`);
     data = await response.json();
   } catch (error) {
