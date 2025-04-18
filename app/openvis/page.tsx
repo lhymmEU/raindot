@@ -4,13 +4,15 @@ import Footer from "@/app/components/footer";
 import VoterChart from "@/app/openvis/voter-chart";
 
 export const dynamic = 'force-dynamic'; // Prevent static generation
+//const baseUrl = "http://localhost:3000"
+const baseUrl = "https://raindot.vercel.app";
 
 export default async function OpenVis() {
   
   let data = { data: [] };
   
   try {
-    const response = await fetch(`https://raindot.vercel.app/api/dune`);
+    const response = await fetch(`${baseUrl}/api/dune`);
     if (!response.ok) throw new Error(`Error: ${response.status}`);
     data = await response.json();
   } catch (error) {
