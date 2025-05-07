@@ -7,27 +7,27 @@ export default function Learn() {
   const cards = [
     {
       title: "GET STARTED",
-      descriptionTop: "BUILD NOW",
-      descriptionBottom: " ",
-      link: "#",
+      description: "BUILD NOW",
+      imageUrl: "/temp.png",
+      buttonLink: "/temp",
     },
     {
       title: "W3F SUPPORT",
-      descriptionTop: "GOT STUCK?",
-      descriptionBottom: "GET HELP",
-      link: "#",
+      description: "GOT STUCK?",
+      imageUrl: "/temp.png",
+      buttonLink: "/temp",
     },
     {
       title: "ON/OFF RAMP",
-      descriptionTop: "BUILD NOW",
-      descriptionBottom: " ",
-      link: "#",
+      description: "BUILD NOW",
+      imageUrl: "/temp.png",
+      buttonLink: "/temp",
     },
     {
       title: "PBA",
-      descriptionTop: "FORMAL",
-      descriptionBottom: "EDUCATION",
-      link: "#",
+      description: "FORMAL EDUCATION",
+      imageUrl: "/temp.png",
+      buttonLink: "/temp",
     },
   ];
   return (

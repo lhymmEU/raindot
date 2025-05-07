@@ -6,21 +6,21 @@ export default function Build() {
   const cards = [
     {
       title: "DOCS",
-      descriptionTop: "BUILD NOW",
-      descriptionBottom: "",
-      link: "#",
+      description: "BUILD NOW",
+      imageUrl: "/temp.png",
+      buttonLink: "/temp",
     },
     {
       title: "STACK XCHANGE",
-      descriptionTop: "GOT STUCK?",
-      descriptionBottom: "GET HELP",
-      link: "#",
+      description: "GOT STUCK?",
+      imageUrl: "/temp.png",
+      buttonLink: "/temp",
     },
     {
       title: "SUPPORT",
-      descriptionTop: "GENERAL",
-      descriptionBottom: "INFO",
-      link: "#",
+      description: "GENERAL INFO",
+      imageUrl: "/temp.png",
+      buttonLink: "/temp",
     },
   ];
   return (

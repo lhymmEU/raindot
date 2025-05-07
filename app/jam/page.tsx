@@ -49,21 +49,21 @@ export default function JAM() {
   const cards = [
     {
       title: "JAM",
-      descriptionTop: "ONE LINER",
-      descriptionBottom: "ONE LINER",
-      link: "#",
+      description: "ONE LINER",
+      imageUrl: "/temp.png",
+      buttonLink: "/temp",
     },
     {
       title: "BUILD",
-      descriptionTop: "ONE LINER",
-      descriptionBottom: "ONE LINER",
-      link: "#",
+      description: "ONE LINER",
+      imageUrl: "/temp.png",
+      buttonLink: "/temp",
     },
     {
       title: "EARN",
-      descriptionTop: "ONE LINER",
-      descriptionBottom: "ONE LINER",
-      link: "#",
+      description: "ONE LINER",
+      imageUrl: "/temp.png",
+      buttonLink: "/temp",
     },
   ];
   return (
