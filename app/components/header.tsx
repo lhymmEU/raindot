@@ -1,10 +1,32 @@
 "use client";
 
-import { useState } from "react";
-import { Menu } from "lucide-react";
 import Image from "next/image";
+import HeaderButton from "./header-button";
+
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const jamItems = [
+    { text: "Item 1", href: "#" },
+    { text: "Item 2", href: "#" },
+    { text: "Item 3", href: "#" },
+  ];
+
+  const buildItems = [
+    { text: "Item 1", href: "#" },
+    { text: "Item 2", href: "#" },
+    { text: "Item 3", href: "#" },
+  ];
+
+  const learnItems = [
+    { text: "Item 1", href: "#" },
+    { text: "Item 2", href: "#" },
+    { text: "Item 3", href: "#" },
+  ];
+
+  const earnItems = [
+    { text: "Item 1", href: "#" },
+    { text: "Item 2", href: "#" },
+    { text: "Item 3", href: "#" },
+  ];
 
   return (
     <header className="p-6 flex justify-between items-center border-b border-black">
@@ -15,22 +37,22 @@ export default function Header() {
         height={32}
       />
 
-      <button
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="focus:outline-none"
-      >
-        <Menu className="w-6 h-6" />
-      </button>
+      <div className="flex gap-[40px] text-[24px] font-[300]">
+        <HeaderButton text="JAM" dropdownItems={jamItems} />
+        <HeaderButton text="Build" dropdownItems={buildItems} />
+        <HeaderButton text="Learn" dropdownItems={learnItems} />
+        <HeaderButton text="Earn" dropdownItems={earnItems} />
+      </div>
 
-      {isMenuOpen && (
-        <div className="absolute top-16 right-6 bg-white shadow-lg p-4 z-50">
-          <ul className="space-y-2">
-            <li>Menu Item 1</li>
-            <li>Menu Item 2</li>
-            <li>Menu Item 3</li>
-          </ul>
-        </div>
-      )}
+      {/* This is used to make the header buttons center aligned */}
+      <div className="invisible">
+        <Image
+          src="/polkadot-logo.svg"
+          alt="Placeholder"
+          width={32}
+          height={32}
+        />
+      </div>
     </header>
   );
 }
