@@ -79,7 +79,7 @@ export default function Earn() {
       <Header />
       <Hero
         title="EARN"
-        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod"
+        description="There are various ways to obtain funding. These are divided into technical, more geared towards developers and non-technical ones which are dedicated to non developer contributors."
       />
       <div className="border-y border-black px-[68px] py-[40px]">
         <h1 className="text-[80px] font-[700]">HIGHLIGHTS</h1>

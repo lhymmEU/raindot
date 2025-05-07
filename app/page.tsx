@@ -36,10 +36,9 @@ export default function Home() {
       <Header />
       <main className="flex-grow">
         <Hero
-          title="THE PORTAL"
+          title="RAINDOTS"
           description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod"
-          buttonOneText="Get Started"
-          buttonTwoText="Explore"
+          buttonText="Get Started"
         />
         <CardGrid cards={cards} />
         <ChatSection />

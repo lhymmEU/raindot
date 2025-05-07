@@ -1,26 +1,24 @@
 interface HeroProps {
   title: string;
   description: string;
-  buttonOneText?: string;
-  buttonTwoText?: string;
+  buttonText?: string;
 }
 
-export default function Hero({ title, description, buttonOneText, buttonTwoText }: HeroProps) {
+export default function Hero({ title, description, buttonText }: HeroProps) {
   return (
-    <section className="py-16 text-center px-4 border-b">
-      <h1 className="text-[80px] font-[700] tracking-tight mb-6">{title}</h1>
-      <p className="text-[44px] font-[500] max-w-3xl mx-auto mb-10 uppercase tracking-wide leading-none">
-        {description}
-      </p>
-      {/* If buttonOneText and buttonTwoText are provided, show the buttons */}
-      {buttonOneText && buttonTwoText && <div className="flex flex-col sm:flex-row justify-center gap-4">
-        <button className="w-[346px] h-[77px] px-4 py-2 bg-black hover:bg-gray-800 text-[32px] text-white font-[500] uppercase tracking-wide cursor-pointer">
-          {buttonOneText}
+    <section className="py-[64px] px-[82px] border-b border-black">
+      <div className="flex flex-col">
+        <h1 className="text-[80px] font-[700] tracking-tight">{title}</h1>
+        <p className="text-[24px] font-[400] tracking-tight leading-none">
+          {description}
+        </p>
+      </div>
+
+      {buttonText && (
+        <button className="bg-black text-white text-[32px] font-[500] px-[40px] py-2 uppercase mt-6 rounded-full">
+          {buttonText}
         </button>
-        <button className="w-[346px] h-[77px] px-4 py-2 border border-black uppercase text-[32px] font-[500] tracking-wide cursor-pointer hover:bg-gray-300">
-          {buttonTwoText}
-        </button>
-      </div>}
+      )}
     </section>
-  )
+  );
 }
