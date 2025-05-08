@@ -60,11 +60,9 @@ export default function Search() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setFundingType("Type A")}>Type A</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setFundingType("Type B")}>Type B</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setFundingType("Type C")}>Type C</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setFundingType("Type D")}>Type D</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setFundingType("Type E")}>Type E</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setFundingType("Type A")}>Grants</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setFundingType("Type B")}>Bug bounty programs</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setFundingType("Type C")}>On chain treasury</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

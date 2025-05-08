@@ -1,12 +1,22 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Unbounded, Montserrat } from "next/font/google"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
+const unbounded = Unbounded({ 
+  subsets: ["latin"],
+  variable: "--font-unbounded",
+  display: "swap",
+})
+
+const montserrat = Montserrat({ 
+  subsets: ["latin"],
+  variable: "--font-montserrat",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
-  title: "Raindot",
+  title: "Raindots",
   description: "The source of all things Polkadot",
 }
 
@@ -17,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${unbounded.variable} ${montserrat.variable}`}>{children}</body>
     </html>
   )
 }
