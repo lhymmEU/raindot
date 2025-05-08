@@ -23,7 +23,7 @@ export default function Card({
   };
   
   return (
-    <div className="relative w-[350px] border border-black rounded-[30px] overflow-hidden flex flex-col">
+    <div className="relative w-[421px] border border-black rounded-[30px] overflow-hidden flex flex-col">
       {/* Image section */}
       <div className="h-[180px] w-full bg-black relative">
         {imageUrl && (

@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className="bg-black text-white">
       <div className="mx-auto pt-[35px] pb-[70px] px-[68px]">
-        <h2 className="text-3xl font-bold mb-8">THE PORTAL</h2>
+        <h2 className="text-3xl font-bold mb-8">RAINDOTS</h2>
 
         <div className="flex gap-8 justify-between items-start">
           <div className="flex gap-32">
@@ -16,7 +16,7 @@ export default function Footer() {
               <Link href="#" className="block">
                 FEEDBACK FORM
               </Link>
-              <Link href="#" className="block">
+              <Link href="/privacy-policy" className="block">
                 PRIVACY POLICY
               </Link>
             </div>

@@ -1,6 +1,6 @@
 interface HeroProps {
   title: string;
-  description: string;
+  description?: string;
   buttonText?: string;
 }
 
@@ -9,9 +9,11 @@ export default function Hero({ title, description, buttonText }: HeroProps) {
     <section className="py-[64px] px-[82px] border-b border-black">
       <div className="flex flex-col">
         <h1 className="text-[80px] font-[700] tracking-tight">{title}</h1>
-        <p className="text-[24px] font-[400] tracking-tight leading-none">
-          {description}
-        </p>
+        {description && (
+          <p className="text-[24px] font-[400] tracking-tight leading-none">
+            {description}
+          </p>
+        )}
       </div>
 
       {buttonText && (
