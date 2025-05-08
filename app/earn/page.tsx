@@ -1,79 +1,28 @@
 import Header from "@/app/components/header";
 import Hero from "@/app/components/hero";
-import GrantCardGrid from "@/app/components/grant-card-grid";
 import Footer from "@/app/components/footer";
-import ToggleGrantList from "../components/toggle-grant-list";
+import Search from "@/app/components/search";
+import { EarnCardList } from "@/app/components/earn-card-list";
 
 export default function Earn() {
-  const cards = [
+  const opportunities = [
     {
-      imageUrl: "/img-placeholder.svg?height=200&width=400",
-      title: "DOTPLAY BOUNTY",
-      subtitle: "Funding For Gaming Projects",
-      buttonText: "VIEW",
-      href: "#",
+      title: "MEETUPS BOUNTY",
+      tags: ["Non-technical", "On-chain treasury"],
+      description: "Organise a quick meetup and get hassle free funding"
     },
     {
-      imageUrl: "/img-placeholder.svg?height=200&width=400",
-      title: "JOB BOARD",
-      subtitle: "Tasks For Everyone",
-      buttonText: "VIEW",
-      href: "#",
+      title: "WEB3 FOUNDATION GRANTS",
+      tags: ["Technical", "Grants"],
+      description: "Developing a project? Coming here from a hackathon?  Check out Web3 Foundation grants"
     },
     {
-      imageUrl: "/img-placeholder.svg?height=200&width=400",
-      title: "EVENTS BOUNTY",
-      subtitle: "Financing For Events",
-      buttonText: "VIEW",
-      href: "#",
-    },
+      title: "OG RUST BOUNTY",
+      tags: ["Technical", "On-chain treasury"],
+      description: "RFPs for specific rust/Polkadot SDK tasks in the ecosystem"
+    }
   ];
-
-  const technicalCards = [
-    {
-      imageUrl: "/img-placeholder.svg?height=200&width=400",
-      title: "DOTPLAY BOUNTY",
-      subtitle: "Funding For Gaming Projects",
-      buttonText: "VIEW",
-      href: "#",
-    },
-    {
-      imageUrl: "/img-placeholder.svg?height=200&width=400",
-      title: "JOB BOARD",
-      subtitle: "Tasks For Everyone",
-      buttonText: "VIEW",
-      href: "#",
-    },
-    {
-      imageUrl: "/img-placeholder.svg?height=200&width=400",
-      title: "EVENTS BOUNTY",
-      subtitle: "Financing For Events",
-      buttonText: "VIEW",
-      href: "#",
-    },
-    {
-      imageUrl: "/img-placeholder.svg?height=200&width=400",
-      title: "DOTPLAY BOUNTY",
-      subtitle: "Funding For Gaming Projects",
-      buttonText: "VIEW",
-      href: "#",
-    },
-    {
-      imageUrl: "/img-placeholder.svg?height=200&width=400",
-      title: "JOB BOARD",
-      subtitle: "Tasks For Everyone",
-      buttonText: "VIEW",
-      href: "#",
-    },
-    {
-      imageUrl: "/img-placeholder.svg?height=200&width=400",
-      title: "EVENTS BOUNTY",
-      subtitle: "Financing For Events",
-      buttonText: "VIEW",
-      href: "#",
-    },
-  ];
-
+  
   return (
     <>
       <Header />
@@ -81,24 +30,11 @@ export default function Earn() {
         title="EARN"
         description="There are various ways to obtain funding. These are divided into technical, more geared towards developers and non-technical ones which are dedicated to non developer contributors."
       />
-      <div className="border-y border-black px-[68px] py-[40px]">
-        <h1 className="text-[80px] font-[700]">HIGHLIGHTS</h1>
+      <Search />
+      <div className="px-[82px] py-[32px] font-[400] text-[24px]">
+        <p>Funding mechanisms are separated into: on-chain (treasury and bounties), grants and bug bounty programs. Most non-technical funding is on-chain, while others will include development.</p>
       </div>
-      <GrantCardGrid cards={cards} />
-      <div className="border-b border-black px-[68px] py-[40px]">
-        <h1 className="text-[80px] font-[700]">BOUNTIES</h1>
-      </div>
-      <div className="border-b border-black px-[68px] py-[40px]">
-        <h1 className="text-[30px] font-[400]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </h1>
-      </div>
-      <ToggleGrantList listName="Technical" cards={technicalCards} />
-      <ToggleGrantList listName="Non-Technical" cards={technicalCards} />
-      <ToggleGrantList listName="Grant Programs" cards={technicalCards} />
-      <ToggleGrantList listName="Ecosystem Grants" cards={technicalCards} />
-      <ToggleGrantList listName="On-Chain Treasury" cards={technicalCards} />
+      <EarnCardList opportunities={opportunities} />
       <Footer />
     </>
   );
