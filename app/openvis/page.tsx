@@ -9,16 +9,18 @@ import { RefVotingPowerTurnout } from "./ref-voting-power-turnout";
 import { FortuneTeller } from "./fortune-teller";
 import { getDriver } from "@/lib/driverStore";
 import { useEffect } from "react";
-
+import { VotingPowerInequality } from "./voting-power-inequality";
 export default function OpenVis() {
   // Initialize the driver in useEffect to ensure it runs only on the client
   useEffect(() => {
     // Initialize the singleton driver
-    getDriver().then(() => {
-      console.log("Driver initialized in page component");
-    }).catch(error => {
-      console.error("Failed to initialize driver:", error);
-    });
+    getDriver()
+      .then(() => {
+        console.log("Driver initialized in page component");
+      })
+      .catch((error) => {
+        console.error("Failed to initialize driver:", error);
+      });
   }, []);
 
   return (
@@ -46,6 +48,11 @@ export default function OpenVis() {
           <hr className="border-gray-200" />
           <section className="w-full">
             <FortuneTeller />
+          </section>
+
+          <hr className="border-gray-200" />
+          <section className="w-full">
+            <VotingPowerInequality />
           </section>
         </div>
       </div>
