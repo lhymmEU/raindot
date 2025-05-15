@@ -56,10 +56,14 @@ export function ActiveVoters({ baseUrl }: { baseUrl: string }) {
   }, [baseUrl]);
 
   // Process data for the chart - use top 15 voters for better visibility
-  const chartData = data.map(voter => ({
-    name: voter.name || voter.wallet_address.substring(0, 8) + '...',
-    votes: typeof voter.vote_count === 'object' ? voter.vote_count.low : voter.vote_count
-  }));
+  let chartData: { name: string; votes: number }[] = [];
+
+  if (data !== null) {
+    chartData = data.map(voter => ({
+      name: voter.name || voter.wallet_address.substring(0, 8) + '...',
+      votes: typeof voter.vote_count === 'object' ? voter.vote_count.low : voter.vote_count
+    }));
+  }
 
   return (
     <div className="flex flex-col space-y-4">
