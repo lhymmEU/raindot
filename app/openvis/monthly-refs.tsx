@@ -11,9 +11,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-//const baseUrl = "http://localhost:3000";
-const baseUrl = "https://raindot.vercel.app";
-
 // Define the type for our data items
 interface ProposeRel {
   rel: {
@@ -26,46 +23,67 @@ interface MonthlyCount {
   count: number;
 }
 
-export function MonthlyRefs() {
+export function MonthlyRefs({ baseUrl }: { baseUrl: string }) {
   const [data, setData] = useState<ProposeRel[]>([]);
   const [monthlyData, setMonthlyData] = useState<MonthlyCount[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch all the refs from the database
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`${baseUrl}/api/graph`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query:
-            "MATCH ()-[rel:PROPOSED]->() RETURN { timestamp: rel.timestamp } AS rel",
-        }),
-      });
-      const data = await res.json();
-      // The data is an array of objects with one field: timestamp
-      setData(data.data);
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(`${baseUrl}/api/graph`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query:
+              "MATCH ()-[rel:PROPOSED]->() RETURN { timestamp: rel.timestamp } AS rel",
+          }),
+        });
+        const result = await res.json();
+        if (result && result.data) {
+          setData(result.data);
+        } else {
+          setError("Received invalid data format");
+        }
+      } catch (err) {
+        console.error("Error fetching refs data:", err);
+        setError("Failed to fetch referendum data");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
-  }, []);
+  }, [baseUrl]);
 
   // Process the data to get the monthly refs trends
   useEffect(() => {
-    if (data.length === 0) return;
+    // More robust check for valid data
+    if (!Array.isArray(data) || data.length === 0) return;
 
     // Group timestamps by month and count occurrences
     const monthCounts: Record<string, number> = {};
 
     data.forEach((item) => {
-      // Parse the timestamp and format as YYYY-MM
-      const date = new Date(item.rel.timestamp);
-      const monthKey = `${date.getFullYear().toString().slice(-2)}-${String(
-        date.getMonth() + 1
-      ).padStart(2, "0")}`;
+      if (!item.rel || !item.rel.timestamp) return;
+      
+      try {
+        // Parse the timestamp and format as YYYY-MM
+        const date = new Date(item.rel.timestamp);
+        const monthKey = `${date.getFullYear().toString().slice(-2)}-${String(
+          date.getMonth() + 1
+        ).padStart(2, "0")}`;
 
-      // Increment count for this month
-      monthCounts[monthKey] = (monthCounts[monthKey] || 0) + 1;
+        // Increment count for this month
+        monthCounts[monthKey] = (monthCounts[monthKey] || 0) + 1;
+      } catch (err) {
+        console.error("Error parsing timestamp:", item.rel.timestamp, err);
+      }
     });
 
     // Convert to array format needed for recharts
@@ -86,7 +104,11 @@ export function MonthlyRefs() {
         <p>Insights: We can share some insights here.</p>
       </div>
       <div style={{ width: "100%", height: 400 }}>
-        {monthlyData.length > 0 ? (
+        {loading ? (
+          <p>Loading data...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : monthlyData.length > 0 ? (
           <ResponsiveContainer>
             <LineChart
               data={monthlyData}
@@ -112,7 +134,7 @@ export function MonthlyRefs() {
             </LineChart>
           </ResponsiveContainer>
         ) : (
-          <p>Loading data...</p>
+          <p>No data available</p>
         )}
       </div>
     </div>

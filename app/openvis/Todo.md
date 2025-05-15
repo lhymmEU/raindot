@@ -1,6 +1,6 @@
 ## Overview Dashboard
 1. ✅ Monthly proposals
-2. Top 50 active voters
+2. ✅ Top 15 voters
 
 ## Voter Dashboard
 1. Monthly voter turnout
