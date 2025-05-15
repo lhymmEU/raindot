@@ -63,7 +63,7 @@ export function MonthlyRefs({ data }: { data: ProposeRel[] }) {
   }, [data]);
 
   return (
-    <div>
+    <div className="w-full">
       <div className="flex flex-col gap-2 mb-4">
         <h1>Monthly Proposed Referendums</h1>
         <p>Insights: We can share some insights here.</p>

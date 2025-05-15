@@ -42,7 +42,7 @@ export function ActiveVoters({ data }: { data: Voter[] }) {
   }, [data]);
   
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-4 w-full">
       <div className="flex flex-col gap-2 mb-4">
         <h1>Top 15 Voters</h1>
         <p>Insights: We can share some insights here.</p>
