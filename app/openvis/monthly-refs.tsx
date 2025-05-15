@@ -12,7 +12,7 @@ import {
 } from "recharts";
 
 // Define the type for our data items
-interface ProposeRel {
+export interface ProposeRel {
   rel: {
     timestamp: string;
   };
@@ -23,43 +23,8 @@ interface MonthlyCount {
   count: number;
 }
 
-export function MonthlyRefs({ baseUrl }: { baseUrl: string }) {
-  const [data, setData] = useState<ProposeRel[]>([]);
+export function MonthlyRefs({ data }: { data: ProposeRel[] }) {
   const [monthlyData, setMonthlyData] = useState<MonthlyCount[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Fetch all the refs from the database
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(`${baseUrl}/api/graph`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            query:
-              "MATCH ()-[rel:PROPOSED]->() RETURN { timestamp: rel.timestamp } AS rel",
-          }),
-        });
-        const result = await res.json();
-        if (result && result.data) {
-          setData(result.data);
-        } else {
-          setError("Received invalid data format");
-        }
-      } catch (err) {
-        console.error("Error fetching refs data:", err);
-        setError("Failed to fetch referendum data");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [baseUrl]);
 
   // Process the data to get the monthly refs trends
   useEffect(() => {
@@ -104,11 +69,7 @@ export function MonthlyRefs({ baseUrl }: { baseUrl: string }) {
         <p>Insights: We can share some insights here.</p>
       </div>
       <div style={{ width: "100%", height: 400 }}>
-        {loading ? (
-          <p>Loading data...</p>
-        ) : error ? (
-          <p>Error: {error}</p>
-        ) : monthlyData.length > 0 ? (
+        {monthlyData.length > 0 ? (
           <ResponsiveContainer>
             <LineChart
               data={monthlyData}

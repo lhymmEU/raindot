@@ -12,7 +12,7 @@ import {
   LabelList,
 } from "recharts";
 
-interface Voter {
+export interface Voter {
   wallet_address: string;
   name: string;
   vote_count: {
@@ -21,42 +21,10 @@ interface Voter {
   };
 }
 
-export function ActiveVoters({ baseUrl }: { baseUrl: string }) {
-  const [data, setData] = useState<Voter[]>([]);
+export function ActiveVoters({ data }: { data: Voter[] }) {
   const [chartData, setChartData] = useState<{ name: string; votes: number }[]>(
     []
   );
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`${baseUrl}/api/graph`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            query: `MATCH (v:Voter)-[:VOTED]->()
-                    RETURN 
-                      v.wallet_address AS wallet_address,
-                      v.display_name AS name,
-                      COUNT(*) AS vote_count
-                    ORDER BY vote_count DESC
-                    LIMIT 15`,
-          }),
-        });
-        const result = await res.json();
-        setData(result.data);
-      } catch (error) {
-        console.error("Error fetching voter data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [baseUrl]);
 
   // Process data for the chart - use top 15 voters for better visibility
   useEffect(() => {
@@ -80,8 +48,8 @@ export function ActiveVoters({ baseUrl }: { baseUrl: string }) {
         <p>Insights: We can share some insights here.</p>
       </div>
 
-      {loading ? (
-        <p>Loading data...</p>
+      {chartData.length === 0 ? (
+        <p>No data available</p>
       ) : (
         <div className="w-full h-[500px]">
           <ResponsiveContainer width="100%" height="100%">
