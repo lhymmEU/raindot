@@ -58,7 +58,7 @@ export function ActiveVoters({ baseUrl }: { baseUrl: string }) {
   // Process data for the chart - use top 15 voters for better visibility
   let chartData: { name: string; votes: number }[] = [];
 
-  if (data !== null) {
+  if (data !== null && data.length > 0) {
     chartData = data.map(voter => ({
       name: voter.name || voter.wallet_address.substring(0, 8) + '...',
       votes: typeof voter.vote_count === 'object' ? voter.vote_count.low : voter.vote_count
