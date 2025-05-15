@@ -9,7 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LabelList
+  LabelList,
 } from "recharts";
 
 interface Voter {
@@ -18,11 +18,14 @@ interface Voter {
   vote_count: {
     low: number;
     high: number;
-  }
+  };
 }
 
 export function ActiveVoters({ baseUrl }: { baseUrl: string }) {
   const [data, setData] = useState<Voter[]>([]);
+  const [chartData, setChartData] = useState<{ name: string; votes: number }[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -56,22 +59,27 @@ export function ActiveVoters({ baseUrl }: { baseUrl: string }) {
   }, [baseUrl]);
 
   // Process data for the chart - use top 15 voters for better visibility
-  let chartData: { name: string; votes: number }[] = [];
+  useEffect(() => {
+    // More robust check for valid data
+    if (!Array.isArray(data) || data.length === 0) return;
 
-  if (data !== null && data.length > 0) {
-    chartData = data.map(voter => ({
-      name: voter.name || voter.wallet_address.substring(0, 8) + '...',
-      votes: typeof voter.vote_count === 'object' ? voter.vote_count.low : voter.vote_count
+    const chartData = data.map((voter) => ({
+      name: voter.name || voter.wallet_address.substring(0, 8) + "...",
+      votes:
+        typeof voter.vote_count === "object"
+          ? voter.vote_count.low
+          : voter.vote_count,
     }));
-  }
-
+    setChartData(chartData);
+  }, [data]);
+  
   return (
     <div className="flex flex-col space-y-4">
       <div className="flex flex-col gap-2 mb-4">
         <h1>Top 15 Voters</h1>
         <p>Insights: We can share some insights here.</p>
       </div>
-      
+
       {loading ? (
         <p>Loading data...</p>
       ) : (
@@ -82,7 +90,13 @@ export function ActiveVoters({ baseUrl }: { baseUrl: string }) {
               margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="category" dataKey="name" angle={-45} textAnchor="end" height={80} />
+              <XAxis
+                type="category"
+                dataKey="name"
+                angle={-45}
+                textAnchor="end"
+                height={80}
+              />
               <YAxis type="number" />
               <Tooltip />
               <Bar dataKey="votes" fill="#DDD5F3" name="Vote Count">
