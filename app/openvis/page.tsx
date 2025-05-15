@@ -4,8 +4,8 @@ import Footer from "@/app/components/footer";
 import { MonthlyRefs } from "./monthly-refs";
 import { ActiveVoters } from "./active-voters";
 
-const baseUrl = "http://localhost:3000";
-// const baseUrl = "https://raindot.vercel.app";
+// const baseUrl = "http://localhost:3000";
+const baseUrl = "https://raindot.vercel.app";
 
 export default function OpenVis() {
   return (
