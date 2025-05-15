@@ -23,8 +23,36 @@ interface MonthlyCount {
   count: number;
 }
 
-export function MonthlyRefs({ data }: { data: ProposeRel[] }) {
+export function MonthlyRefs() {
   const [monthlyData, setMonthlyData] = useState<MonthlyCount[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<ProposeRel[]>([]);
+
+  // Fetch data
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Remove the delay as it's no longer needed
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+        const response = await fetch(`${baseUrl}/api/graph/monthly-refs`);
+        const result = await response.json();
+
+        if (result && result.data) {
+          setData(result.data);
+          console.log("Monthly Refs data fetched successfully:", result.data.length);
+        } else {
+          console.error("Invalid response format:", result);
+        }
+      } catch (err) {
+        console.error("Error fetching monthly refs data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Process the data to get the monthly refs trends
   useEffect(() => {
@@ -69,7 +97,9 @@ export function MonthlyRefs({ data }: { data: ProposeRel[] }) {
         <p>Insights: We can share some insights here.</p>
       </div>
       <div style={{ width: "100%", height: 400 }}>
-        {monthlyData.length > 0 ? (
+        {loading ? (
+          <p>Loading data...</p>
+        ) : monthlyData.length > 0 ? (
           <ResponsiveContainer>
             <LineChart
               data={monthlyData}

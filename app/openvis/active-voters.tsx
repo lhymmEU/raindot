@@ -21,10 +21,38 @@ export interface Voter {
   };
 }
 
-export function ActiveVoters({ data }: { data: Voter[] }) {
+export function ActiveVoters() {
   const [chartData, setChartData] = useState<{ name: string; votes: number }[]>(
     []
   );
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<Voter[]>([]);
+
+  // Fetch data
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Remove the delay as it's no longer needed
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+        const response = await fetch(`${baseUrl}/api/graph/active-voters`);
+        const result = await response.json();
+
+        if (result && result.data) {
+          setData(result.data);
+          console.log("Active Voters data fetched successfully:", result.data.length);
+        } else {
+          console.error("Invalid voters data format:", result);
+        }
+      } catch (err) {
+        console.error("Error fetching voters data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Process data for the chart - use top 15 voters for better visibility
   useEffect(() => {
@@ -48,7 +76,9 @@ export function ActiveVoters({ data }: { data: Voter[] }) {
         <p>Insights: We can share some insights here.</p>
       </div>
 
-      {chartData.length === 0 ? (
+      {loading ? (
+        <p>Loading data...</p>
+      ) : chartData.length === 0 ? (
         <p>No data available</p>
       ) : (
         <div className="w-full h-[500px]">
