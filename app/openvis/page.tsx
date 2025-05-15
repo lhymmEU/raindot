@@ -7,8 +7,8 @@ import { MonthlyRefs, ProposeRel } from "./monthly-refs";
 import { ActiveVoters, Voter } from "./active-voters";
 import { useEffect, useState } from "react";
 
-const baseUrl = "http://localhost:3000";
-//const baseUrl = "https://raindot.vercel.app";
+//const baseUrl = "http://localhost:3000";
+const baseUrl = "https://raindot.vercel.app";
 
 export default function OpenVis() {
   const [proposedData, setProposedData] = useState<ProposeRel[]>([]);
