@@ -5,7 +5,7 @@ import Hero from "@/app/components/hero";
 import Footer from "@/app/components/footer";
 import { MonthlyRefs } from "./monthly-refs";
 //import { ActiveVoters } from "./active-voters";
-//import { RefVotingPowerTurnout } from "./ref-voting-power-turnout";
+import { RefVotingPowerTurnout } from "./ref-voting-power-turnout";
 //import { FortuneTeller } from "./fortune-teller";
 import { getDriver } from "@/lib/driverStore";
 import { useEffect } from "react";
@@ -52,6 +52,11 @@ export default function OpenVis() {
           */}
           <section className="w-full">
             <MonthlyRefs />
+          </section>
+
+          <hr className="border-gray-200" />
+          <section className="w-full">
+            <RefVotingPowerTurnout />
           </section>
 
           <hr className="border-gray-200" />
