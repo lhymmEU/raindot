@@ -1,9 +1,13 @@
-## Overview Dashboard
-1. ✅ Monthly proposals
-2. ✅ Top 15 voters
-
-## Voter Dashboard
-1. ✅ Referendum voting power turnout
-2. ✅ Fortune teller
-3. ✅ Voting power inequality
-4. Sleepy voters
+## Todo Graphs
+- ✅ Erroneous rate number
+- ✅ Erroneous rate chart
+- Avg voter turnout per month line chart
+- ✅ Voter turnout per category
+- ✅ Per-category money allocation chart
+- Per-category money allocation velocity chart
+- Sankey diagram for treasury outflow
+- Per-category proposal trends chart
+- Per-category approval rate trends and comparison chart
+- Per-category approved amount trend and comparison chart
+- Per-addr total funding amounts with category tags per funding
+- Per-addr proposing & voting information
