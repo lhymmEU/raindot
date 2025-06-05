@@ -15,6 +15,7 @@ import { VoterTurnoutCategory } from "./voter-turnout-category";
 import { CapitalAllocationCategory } from "./capital-allocation-category";
 import ProposalTrendCategory from "./proposal-trend-category";
 import ApprovalRateCategory from "./approval-rate-category";
+import ApprovalAmountCategory from "./approval-amount-category";
 export default function OpenVis() {
   // Initialize the driver in useEffect to ensure it runs only on the client
   useEffect(() => {
@@ -90,6 +91,11 @@ export default function OpenVis() {
           <hr className="border-gray-200" />
           <section className="w-full">
             <ApprovalRateCategory />
+          </section>
+
+          <hr className="border-gray-200" />
+          <section className="w-full">
+            <ApprovalAmountCategory />
           </section>
         </div>
       </div>
