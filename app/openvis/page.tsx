@@ -13,6 +13,7 @@ import { VotingPowerInequality } from "./voting-power-inequality";
 import { ErroneousRate } from "./erroneous-rate";
 import { VoterTurnoutCategory } from "./voter-turnout-category";
 import { CapitalAllocationCategory } from "./capital-allocation-category";
+import ProposalTrendCategory from "./proposal-trend-category";
 export default function OpenVis() {
   // Initialize the driver in useEffect to ensure it runs only on the client
   useEffect(() => {
@@ -77,6 +78,11 @@ export default function OpenVis() {
           <hr className="border-gray-200" />
           <section className="w-full">
             <CapitalAllocationCategory />
+          </section>
+
+          <hr className="border-gray-200" />
+          <section className="w-full">
+            <ProposalTrendCategory />
           </section>
         </div>
       </div>
