@@ -1,7 +1,7 @@
 ## Todo Graphs
 - ✅ Erroneous rate number
 - ✅ Erroneous rate chart
-- Avg voter turnout per month line chart
+- ✅ Avg voter turnout per category line chart
 - ✅ Voter turnout per category
 - ✅ Per-category money allocation chart
 - Per-category money allocation velocity chart
@@ -9,5 +9,5 @@
 - ✅ Per-category proposal trends chart
 - ✅ Per-category approval rate comparison chart
 - ✅ Per-category approved amount comparison chart
-- Per-addr total funding amounts with category tags per funding
-- Per-addr proposing & voting information
+- ✅ Per-addr total funding amounts with category tags per funding
+- ✅ Per-addr proposing & voting information

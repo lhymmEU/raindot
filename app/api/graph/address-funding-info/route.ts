@@ -1,17 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDriver } from "@/lib/driverStore";
 
-interface AddressFundingInfo {
+interface AddressInfo {
   address: string;
-  totalRefs: {
+  totalRefs?: {
     id: number;
     requested: number;
     status: string;
   }[];
-  fundingAmount: {
+  funding?: {
     category: string;
     amount: number;
     refs: number[];
+  }[];
+  voting?: {
+    refId: number;
+    category: string[];
+    power: number;
+    decision: "AYE" | "NAY" | "ABSTAIN";
   }[];
 }
 
@@ -65,8 +71,24 @@ export async function GET(req: NextRequest) {
             ORDER BY categoryName
         `;
 
+        // Query to get voting information for the address
+        const votingQuery = `
+            MATCH (voter)-[v:VOTED]->(ref)
+            WHERE voter.wallet_address = $address
+            UNWIND labels(ref) as label
+            WITH ref.id as refId, 
+                 v.votingPower as power, 
+                 v.decision as decision,
+                 collect(DISTINCT label) as categories
+            WHERE any(cat IN categories WHERE cat IN ['BD', 'Compensation', 'EducationAndResearch', 'Event', 'Existing', 'Marketing', 'New', 'Product', 'Protocol', 'Security'])
+            WITH refId, power, decision, [cat IN categories WHERE cat IN ['BD', 'Compensation', 'EducationAndResearch', 'Event', 'Existing', 'Marketing', 'New', 'Product', 'Protocol', 'Security']] as filteredCategories
+            RETURN refId, filteredCategories as category, power, decision
+            ORDER BY refId
+        `;
+
         const refsResult = await session.executeRead((tx) => tx.run(refsQuery, { address }));
         const fundingResult = await session.executeRead((tx) => tx.run(fundingQuery, { address }));
+        const votingResult = await session.executeRead((tx) => tx.run(votingQuery, { address }));
 
         // Transform refs data
         const totalRefs = refsResult.records.map((record) => {
@@ -79,7 +101,7 @@ export async function GET(req: NextRequest) {
         });
 
         // Transform funding data
-        const fundingAmount = fundingResult.records.map((record) => {
+        const funding = fundingResult.records.map((record) => {
             const obj = record.toObject();
             
             // Properly convert totalAmount to number before dividing
@@ -96,13 +118,33 @@ export async function GET(req: NextRequest) {
             };
         });
 
-        const result: AddressFundingInfo = {
+        // Transform voting data
+        const voting = votingResult.records.map((record) => {
+            const obj = record.toObject();
+            
+            // Convert power to number if it's an object
+            let power = obj.power;
+            if (typeof power === 'object' && power.low !== undefined) {
+                power = power.low;
+            }
+            power = Number(power);
+            
+            return {
+                refId: typeof obj.refId === 'object' ? obj.refId.low : obj.refId,
+                category: obj.category || [],
+                power: power,
+                decision: obj.decision as "AYE" | "NAY" | "ABSTAIN"
+            };
+        });
+
+        const result: AddressInfo = {
             address,
             totalRefs,
-            fundingAmount
+            funding,
+            voting
         };
 
-        console.log(`Address Funding Info query completed successfully for ${address} with ${totalRefs.length} refs and ${fundingAmount.length} categories`);
+        console.log(`Address Funding Info query completed successfully for ${address} with ${totalRefs.length} refs, ${funding.length} categories, and ${voting.length} votes`);
         
         return NextResponse.json({ data: result });
     } catch (error) {

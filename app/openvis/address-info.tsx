@@ -24,10 +24,16 @@ interface AddressFundingInfo {
     requested: number;
     status: string;
   }[];
-  fundingAmount: {
+  funding: {
     category: string;
     amount: number;
     refs: number[];
+  }[];
+  voting: {
+    refId: number;
+    category: string[];
+    power: number;
+    decision: "AYE" | "NAY" | "ABSTAIN";
   }[];
 }
 
@@ -45,6 +51,13 @@ interface CustomTooltipProps extends TooltipProps<number, string> {
     };
   }>;
   label?: string;
+}
+
+interface ChartDataEntry {
+  category: string;
+  amount: number;
+  percentage: number;
+  fill: string;
 }
 
 const COLORS = [
@@ -121,6 +134,7 @@ export default function AddressInfo() {
   const [addressData, setAddressData] = useState<AddressFundingInfo | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'proposals' | 'voting'>('proposals');
 
   const handleSearch = async () => {
     if (!address.trim()) {
@@ -163,24 +177,24 @@ export default function AddressInfo() {
   };
 
   // Prepare chart data separated by category type
-  const initiativeTypeData = addressData?.fundingAmount
-    .filter(item => INITIATIVE_TYPES.includes(item.category))
-    .map(item => ({
+  const initiativeTypeData = addressData?.funding
+    .filter((item: { category: string; amount: number; refs: number[] }) => INITIATIVE_TYPES.includes(item.category))
+    .map((item: { category: string; amount: number; refs: number[] }) => ({
       category: item.category,
       amount: item.amount,
       refs: item.refs
     })) || [];
 
-  const functionalFocusData = addressData?.fundingAmount
-    .filter(item => FUNCTIONAL_FOCUS.includes(item.category))
-    .map(item => ({
+  const functionalFocusData = addressData?.funding
+    .filter((item: { category: string; amount: number; refs: number[] }) => FUNCTIONAL_FOCUS.includes(item.category))
+    .map((item: { category: string; amount: number; refs: number[] }) => ({
       category: item.category,
       amount: item.amount,
       refs: item.refs
     })) || [];
 
-  const initiativePieData = initiativeTypeData.map((item, index) => {
-    const total = initiativeTypeData.reduce((sum, cat) => sum + cat.amount, 0);
+  const initiativePieData = initiativeTypeData.map((item: { category: string; amount: number; refs: number[] }, index: number) => {
+    const total = initiativeTypeData.reduce((sum: number, cat: { amount: number }) => sum + cat.amount, 0);
     return {
       category: item.category,
       amount: item.amount,
@@ -189,8 +203,8 @@ export default function AddressInfo() {
     };
   });
 
-  const functionalPieData = functionalFocusData.map((item, index) => {
-    const total = functionalFocusData.reduce((sum, cat) => sum + cat.amount, 0);
+  const functionalPieData = functionalFocusData.map((item: { category: string; amount: number; refs: number[] }, index: number) => {
+    const total = functionalFocusData.reduce((sum: number, cat: { amount: number }) => sum + cat.amount, 0);
     return {
       category: item.category,
       amount: item.amount,
@@ -200,15 +214,21 @@ export default function AddressInfo() {
   });
 
   // Calculate summary statistics
-  const totalFunding = addressData?.fundingAmount.reduce((sum, cat) => sum + cat.amount, 0) || 0;
+  const totalFunding = addressData?.funding.reduce((sum: number, cat: { amount: number }) => sum + cat.amount, 0) || 0;
   const totalRefs = addressData?.totalRefs.length || 0;
   
   // Get unique approved refs to avoid double counting
   const uniqueApprovedRefs = new Set<number>();
-  addressData?.fundingAmount.forEach(item => {
-    item.refs.forEach(refId => uniqueApprovedRefs.add(refId));
+  addressData?.funding.forEach((item: { refs: number[] }) => {
+    item.refs.forEach((refId: number) => uniqueApprovedRefs.add(refId));
   });
   const approvedRefs = uniqueApprovedRefs.size;
+
+  // Calculate voting statistics
+  const totalVotes = addressData?.voting.length || 0;
+  const ayeVotes = addressData?.voting.filter(vote => vote.decision === 'AYE').length || 0;
+  const nayVotes = addressData?.voting.filter(vote => vote.decision === 'NAY').length || 0;
+  const abstainVotes = addressData?.voting.filter(vote => vote.decision === 'ABSTAIN').length || 0;
 
   return (
     <div className="w-full">
@@ -247,7 +267,7 @@ export default function AddressInfo() {
       {addressData && (
         <div className="space-y-8">
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div className="bg-white border rounded-lg p-4 shadow-sm">
               <h3 className="text-sm font-medium text-gray-500">Total Funding</h3>
               <p className="text-2xl font-bold text-green-600">{formatAmount(totalFunding)}</p>
@@ -265,6 +285,10 @@ export default function AddressInfo() {
               <p className="text-2xl font-bold text-purple-600">
                 {totalRefs > 0 ? `${((approvedRefs / totalRefs) * 100).toFixed(1)}%` : '0%'}
               </p>
+            </div>
+            <div className="bg-white border rounded-lg p-4 shadow-sm">
+              <h3 className="text-sm font-medium text-gray-500">Total Votes</h3>
+              <p className="text-2xl font-bold text-orange-600">{totalVotes}</p>
             </div>
           </div>
 
@@ -321,7 +345,7 @@ export default function AddressInfo() {
                               fill="#8884d8"
                               dataKey="amount"
                             >
-                              {initiativePieData.map((entry, index) => (
+                              {initiativePieData.map((entry: ChartDataEntry, index: number) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                               ))}
                             </Pie>
@@ -378,7 +402,7 @@ export default function AddressInfo() {
                               fill="#8884d8"
                               dataKey="amount"
                             >
-                              {functionalPieData.map((entry, index) => (
+                              {functionalPieData.map((entry: ChartDataEntry, index: number) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                               ))}
                             </Pie>
@@ -393,43 +417,147 @@ export default function AddressInfo() {
             </div>
           )}
 
-          {/* Proposals Table */}
-          {addressData.totalRefs.length > 0 && (
-            <div className="bg-white border rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">Proposal History</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left p-2">Proposal ID</th>
-                      <th className="text-left p-2">Requested Amount</th>
-                      <th className="text-left p-2">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {addressData.totalRefs.map((ref) => (
-                      <tr key={ref.id} className="border-b hover:bg-gray-50">
-                        <td className="p-2">#{ref.id}</td>
-                        <td className="p-2">{formatAmount(ref.requested)}</td>
-                        <td className="p-2">
-                          <span
-                            className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-                              ref.status === 'Approved'
-                                ? 'bg-green-100 text-green-800'
-                                : ref.status === 'Rejected'
-                                ? 'bg-red-100 text-red-800'
-                                : ref.status === 'Voting'
-                                ? 'bg-yellow-100 text-yellow-800'
-                                : 'bg-gray-100 text-gray-800'
-                            }`}
-                          >
-                            {ref.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+          {/* Tables Section with Tabs */}
+          {(addressData.totalRefs.length > 0 || addressData.voting.length > 0) && (
+            <div className="bg-white border rounded-lg">
+              {/* Tab Navigation */}
+              <div className="border-b border-gray-200">
+                <nav className="-mb-px flex">
+                  <button
+                    onClick={() => setActiveTab('proposals')}
+                    className={`py-3 px-6 border-b-2 font-medium text-sm ${
+                      activeTab === 'proposals'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    Proposal History ({addressData.totalRefs.length})
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('voting')}
+                    className={`py-3 px-6 border-b-2 font-medium text-sm ${
+                      activeTab === 'voting'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    Voting History ({addressData.voting.length})
+                  </button>
+                </nav>
+              </div>
+
+              {/* Tab Content */}
+              <div className="p-6">
+                {activeTab === 'proposals' && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Proposal History</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="border-b">
+                            <th className="text-left p-2">Proposal ID</th>
+                            <th className="text-left p-2">Requested Amount</th>
+                            <th className="text-left p-2">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {addressData.totalRefs.map((ref: { id: number; requested: number; status: string }) => (
+                            <tr key={ref.id} className="border-b hover:bg-gray-50">
+                              <td className="p-2">#{ref.id}</td>
+                              <td className="p-2">{formatAmount(ref.requested)}</td>
+                              <td className="p-2">
+                                <span
+                                  className={`inline-block px-2 py-1 rounded text-xs font-medium ${
+                                    ref.status === 'Approved' || ref.status === 'Executed'
+                                      ? 'bg-green-100 text-green-800'
+                                      : ref.status === 'Rejected'
+                                      ? 'bg-red-100 text-red-800'
+                                      : ref.status === 'Voting'
+                                      ? 'bg-yellow-100 text-yellow-800'
+                                      : 'bg-gray-100 text-gray-800'
+                                  }`}
+                                >
+                                  {ref.status}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'voting' && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Voting History</h3>
+                    {/* Voting Summary */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <h4 className="text-sm font-medium text-green-700">AYE Votes</h4>
+                        <p className="text-xl font-bold text-green-600">{ayeVotes}</p>
+                      </div>
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                        <h4 className="text-sm font-medium text-red-700">NAY Votes</h4>
+                        <p className="text-xl font-bold text-red-600">{nayVotes}</p>
+                      </div>
+                      <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                        <h4 className="text-sm font-medium text-gray-700">ABSTAIN Votes</h4>
+                        <p className="text-xl font-bold text-gray-600">{abstainVotes}</p>
+                      </div>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <h4 className="text-sm font-medium text-blue-700">Total Votes</h4>
+                        <p className="text-xl font-bold text-blue-600">{totalVotes}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="border-b">
+                            <th className="text-left p-2">Ref ID</th>
+                            <th className="text-left p-2">Categories</th>
+                            <th className="text-left p-2">Voting Power</th>
+                            <th className="text-left p-2">Decision</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {addressData.voting.map((vote: { refId: number; category: string[]; power: number; decision: "AYE" | "NAY" | "ABSTAIN" }, index: number) => (
+                            <tr key={`${vote.refId}-${index}`} className="border-b hover:bg-gray-50">
+                              <td className="p-2">#{vote.refId}</td>
+                              <td className="p-2">
+                                <div className="flex flex-wrap gap-1">
+                                  {vote.category.map((cat, catIndex) => (
+                                    <span
+                                      key={catIndex}
+                                      className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded"
+                                    >
+                                      {cat}
+                                    </span>
+                                  ))}
+                                </div>
+                              </td>
+                              <td className="p-2">{vote.power.toLocaleString()}</td>
+                              <td className="p-2">
+                                <span
+                                  className={`inline-block px-2 py-1 rounded text-xs font-medium ${
+                                    vote.decision === 'AYE'
+                                      ? 'bg-green-100 text-green-800'
+                                      : vote.decision === 'NAY'
+                                      ? 'bg-red-100 text-red-800'
+                                      : 'bg-gray-100 text-gray-800'
+                                  }`}
+                                >
+                                  {vote.decision}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -437,9 +565,9 @@ export default function AddressInfo() {
       )}
 
       {/* No results message */}
-      {!loading && !error && addressData && addressData.totalRefs.length === 0 && (
+      {!loading && !error && addressData && addressData.totalRefs.length === 0 && addressData.voting.length === 0 && (
         <div className="bg-gray-50 border rounded-md p-6 text-center">
-          <p className="text-gray-600">No proposals found for this address.</p>
+          <p className="text-gray-600">No proposals or voting history found for this address.</p>
         </div>
       )}
     </div>
