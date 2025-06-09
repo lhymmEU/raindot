@@ -5,7 +5,7 @@
 - ✅ Voter turnout per category
 - ✅ Per-category money allocation chart
 - Per-category money allocation velocity chart
-- Sankey diagram for treasury outflow
+- ✅ Sankey diagram for treasury outflow
 - ✅ Per-category proposal trends chart
 - ✅ Per-category approval rate comparison chart
 - ✅ Per-category approved amount comparison chart

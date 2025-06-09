@@ -16,6 +16,7 @@ import { CapitalAllocationCategory } from "./capital-allocation-category";
 import ProposalTrendCategory from "./proposal-trend-category";
 import ApprovalRateCategory from "./approval-rate-category";
 import ApprovalAmountCategory from "./approval-amount-category";
+import TreasuryOutflow from "./treasury-outflow";
 import AddressInfo from "./address-info";
 
 export default function OpenVis() {
@@ -103,6 +104,11 @@ export default function OpenVis() {
           <hr className="border-gray-200" />
           <section className="w-full">
             <AddressInfo />
+          </section>
+
+          <hr className="border-gray-200" />
+          <section className="w-full">
+            <TreasuryOutflow />
           </section>
         </div>
       </div>
