@@ -37,3 +37,8 @@ export interface ErrorData {
 export interface CountData {
   timestamp: string;
 }
+
+export interface CategoryData {
+  category: string;
+  total_votes: number | { low: number; high: number };
+}

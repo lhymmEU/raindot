@@ -21,6 +21,7 @@ import {
   useErroneousRate,
   useMonthlyRefs,
   useRefVotingPowerTurnout,
+  useVoterTurnoutCategory,
   useVotingPowerInequality,
 } from "@/hooks/useOpenGovQueries";
 
@@ -57,13 +58,20 @@ export default function OpenVis() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: votingPowerInequalityError,
   } = useVotingPowerInequality();
-  */
+
   const {
     data: erroneousRateData = { data: [], countData: [] },
     isLoading: isErroneousRateLoading,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: erroneousRateError,
   } = useErroneousRate();
+  */
+  const {
+    data: voterTurnoutCategoryData = [],
+    isLoading: isVoterTurnoutCategoryLoading,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    error: voterTurnoutCategoryError,
+  } = useVoterTurnoutCategory();
 
   return (
     <>
@@ -107,7 +115,7 @@ export default function OpenVis() {
               <VotingPowerInequality data={votingPowerInequalityData} />
             </DataCard>
           </section>
-          */}
+
           <hr className="border-gray-200" />
           <section className="w-full">
             <DataCard
@@ -118,13 +126,20 @@ export default function OpenVis() {
               <ErroneousRate data={erroneousRateData} />
             </DataCard>
           </section>
+          */}
 
-          {/*
           <hr className="border-gray-200" />
           <section className="w-full">
-            <VoterTurnoutCategory />
+            <DataCard
+              title="Vote Distribution by Category"
+              description="See the percentage breakdown of votes across different proposal categories to understand community engagement patterns."
+              isLoading={isVoterTurnoutCategoryLoading}
+            >
+              <VoterTurnoutCategory data={voterTurnoutCategoryData} />
+            </DataCard>
           </section>
 
+          {/*
           <hr className="border-gray-200" />
           <section className="w-full">
             <CapitalAllocationCategory />

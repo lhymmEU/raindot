@@ -9,11 +9,7 @@ import {
   Tooltip,
   TooltipProps,
 } from "recharts";
-
-interface CategoryData {
-  category: string;
-  total_votes: number | { low: number; high: number };
-}
+import type { CategoryData } from "@/types/open-gov";
 
 interface ChartDataPoint {
   category: string;
@@ -58,52 +54,19 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
   return null;
 };
 
-export function VoterTurnoutCategory() {
+export function VoterTurnoutCategory({ data }: { data: CategoryData[] }) {
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
-
-  // Fetch data
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
-        const response = await fetch(`${baseUrl}/api/graph/voter-turnout-category`);
-        const result = await response.json();
-
-        if (result && result.data) {
-          setCategoryData(result.data);
-          console.log("Voter turnout category data fetched successfully:", {
-            categories: result.data.length,
-            totalVotes: result.data.reduce((sum: number, item: CategoryData) => {
-              const votes = typeof item.total_votes === 'object' ? item.total_votes.low : item.total_votes;
-              return sum + votes;
-            }, 0)
-          });
-        } else {
-          console.error("Invalid voter turnout category data format:", result);
-        }
-      } catch (err) {
-        console.error("Error fetching voter turnout category data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   // Process data for the chart - calculate percentages
   useEffect(() => {
-    if (!Array.isArray(categoryData) || categoryData.length === 0) return;
+    if (!Array.isArray(data) || data.length === 0) return;
 
-    const totalVotes = categoryData.reduce((sum, item) => {
+    const totalVotes = data.reduce((sum, item) => {
       const votes = typeof item.total_votes === 'object' ? item.total_votes.low : item.total_votes;
       return sum + votes;
     }, 0);
 
-    const chartData = categoryData.map((item) => {
+    const chartData = data.map((item) => {
       const votes = typeof item.total_votes === 'object' ? item.total_votes.low : item.total_votes;
       return {
         category: item.category,
@@ -115,32 +78,23 @@ export function VoterTurnoutCategory() {
     console.log("Chart data processed:", chartData);
     console.log("Total votes:", totalVotes);
     setChartData(chartData);
-  }, [categoryData]);
+  }, [data]);
 
   return (
     <div className="flex flex-col space-y-4 w-full">
-      <div className="flex flex-col gap-2 mb-4">
-        <h1>Vote Distribution by Category</h1>
-        <p>Insights: See the percentage breakdown of votes across different proposal categories to understand community engagement patterns.</p>
-      </div>
-
-      {loading ? (
-        <p>Loading data...</p>
-      ) : chartData.length === 0 ? (
-        <p>No data available</p>
-      ) : (
-        <div className="w-full h-[600px]">
+      {chartData.length > 0 && (
+        <div className="w-full h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart width={800} height={600}>
               <Pie
                 data={chartData}
                 cx="50%"
-                cy="40%"
+                cy="50%"
                 labelLine={false}
                 label={({ category, percentage }) => 
                   percentage > 5 ? `${category}: ${percentage.toFixed(1)}%` : ''
                 }
-                outerRadius={120}
+                outerRadius={150}
                 innerRadius={0}
                 fill="#8884d8"
                 dataKey="votes"

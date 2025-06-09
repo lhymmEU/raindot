@@ -5,6 +5,7 @@ import {
   RefVotingPowerTurnout,
   VotingPowerInequality,
   ErroneousRateData,
+  CategoryData,
 } from "@/types/open-gov";
 
 // Query keys
@@ -13,6 +14,7 @@ export const queryKeys = {
   refVotingPowerTurnout: ["ref-voting-power-turnout"] as const,
   votingPowerInequality: ["voting-power-inequality"] as const,
   erroneousRate: ["erroneous-rate"] as const,
+  voterTurnoutCategory: ["voter-turnout-category"] as const,
 };
 
 // Custom hooks
@@ -48,6 +50,14 @@ export const useErroneousRate = (options?: UseQueryOptions<ErroneousRateData>) =
   return useQuery({
     queryKey: queryKeys.erroneousRate,
     queryFn: api.fetchErroneousRate,
+    ...options,
+  });
+};
+
+export const useVoterTurnoutCategory = (options?: UseQueryOptions<CategoryData[]>) => {
+  return useQuery({
+    queryKey: queryKeys.voterTurnoutCategory,
+    queryFn: api.fetchVoterTurnoutCategory,
     ...options,
   });
 };

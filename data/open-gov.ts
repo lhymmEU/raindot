@@ -3,6 +3,7 @@ import {
   RefVotingPowerTurnout,
   VotingPowerInequality,
   ErroneousRateData,
+  CategoryData,
 } from "@/types/open-gov";
 
 const baseUrl =
@@ -36,3 +37,5 @@ export const fetchVotingPowerInequality = () =>
   fetcher<VotingPowerInequality[]>("/api/graph/voting-power-inequality");
 export const fetchErroneousRate = () =>
   fetcher<ErroneousRateData>("/api/graph/erroneous-rate");
+export const fetchVoterTurnoutCategory = () =>
+  fetcher<CategoryData[]>("/api/graph/voter-turnout-category");
