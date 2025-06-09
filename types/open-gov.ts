@@ -23,3 +23,17 @@ export interface VotingPowerInequality {
   name: string;
   totalVotingPower: number;
 }
+
+export interface ErroneousRateData {
+  data: ErrorData[];
+  countData: CountData[];
+}
+
+export interface ErrorData {
+  id: string;
+  error_timestamp: string;
+}
+
+export interface CountData {
+  timestamp: string;
+}

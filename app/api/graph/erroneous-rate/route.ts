@@ -33,7 +33,7 @@ export async function GET() {
     const countData = countRes.records.map((record) => record.toObject());
     console.log(`Erroneous Rate query completed successfully with ${data.length} results`);
     
-    return NextResponse.json({ data, countData });
+    return NextResponse.json({ data: {data, countData }});
   } catch (error) {
     console.error("Error in Erroneous Rate query execution:", error);
     return NextResponse.json(

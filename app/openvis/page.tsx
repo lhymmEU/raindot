@@ -18,6 +18,7 @@ import TreasuryOutflow from "./components/treasury-outflow";
 import AddressInfo from "./components/address-info";
 import DataCard from "./components/data-card";
 import {
+  useErroneousRate,
   useMonthlyRefs,
   useRefVotingPowerTurnout,
   useVotingPowerInequality,
@@ -35,7 +36,7 @@ export default function OpenVis() {
         console.error("Failed to initialize driver:", error);
       });
   }, []);
-
+  /*
   const {
     data: refData = [],
     isLoading: isMonthlyRefsLoading,
@@ -56,6 +57,13 @@ export default function OpenVis() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: votingPowerInequalityError,
   } = useVotingPowerInequality();
+  */
+  const {
+    data: erroneousRateData = { data: [], countData: [] },
+    isLoading: isErroneousRateLoading,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    error: erroneousRateError,
+  } = useErroneousRate();
 
   return (
     <>
@@ -63,6 +71,7 @@ export default function OpenVis() {
       <Hero title="OpenVis" description="Visualizing OpenGov data." />
       <div className="py-[50px] px-[68px]">
         <div className="flex flex-col gap-12">
+          {/*
           <section className="w-full">
             <DataCard
               title="Monthly Refs"
@@ -98,13 +107,19 @@ export default function OpenVis() {
               <VotingPowerInequality data={votingPowerInequalityData} />
             </DataCard>
           </section>
-
-          {/*
+          */}
           <hr className="border-gray-200" />
           <section className="w-full">
-            <ErroneousRate />
+            <DataCard
+              title="Erroneous Rate Over Time"
+              description="Track the percentage of erroneous proposals per month to identify users familiarity with the OpenGov system."
+              isLoading={isErroneousRateLoading}
+            >
+              <ErroneousRate data={erroneousRateData} />
+            </DataCard>
           </section>
 
+          {/*
           <hr className="border-gray-200" />
           <section className="w-full">
             <VoterTurnoutCategory />
