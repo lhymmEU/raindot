@@ -2,7 +2,7 @@ import React from "react";
 
 interface DataCardProps {
   title: string;
-  description: string;
+  description: string | string[];
   children: React.ReactNode;
   isLoading?: boolean;
   className?: string;
@@ -64,7 +64,15 @@ export const DataCard: React.FC<DataCardProps> = ({
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
         <h3 className="text-xl font-semibold text-gray-900 mb-1">{title}</h3>
-        <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
+        {Array.isArray(description) ? (
+          <ul className="list-disc pl-5">
+            {description.map((item, index) => (
+              <li key={index} className="text-sm text-gray-600 leading-relaxed">{item}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
+        )}
       </div>
 
       {/* Content with Suspense */}

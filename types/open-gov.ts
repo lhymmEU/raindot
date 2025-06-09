@@ -10,3 +10,10 @@ export interface MonthlyCount {
   month: string;
   count: number;
 }
+
+export interface RefVotingPowerTurnout {
+  id: string;
+  title: string;
+  voteCounts: number;
+  totalVotingPowerTurnout: number;
+}

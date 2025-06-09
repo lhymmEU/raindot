@@ -17,7 +17,10 @@ import ApprovalAmountCategory from "./components/approval-amount-category";
 import TreasuryOutflow from "./components/treasury-outflow";
 import AddressInfo from "./components/address-info";
 import DataCard from "./components/data-card";
-import { useMonthlyRefs } from "@/hooks/useOpenGovQueries";
+import {
+  useMonthlyRefs,
+  useRefVotingPowerTurnout,
+} from "@/hooks/useOpenGovQueries";
 
 export default function OpenVis() {
   // Initialize the driver in useEffect to ensure it runs only on the client
@@ -35,12 +38,16 @@ export default function OpenVis() {
   const {
     data: refData = [],
     isLoading: isMonthlyRefsLoading,
-    error,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    error: monthlyRefsError,
   } = useMonthlyRefs();
 
-  if (error) {
-    console.error("Error fetching data:", error);
-  }
+  const {
+    data: refVotingPowerTurnoutData = [],
+    isLoading: isRefVotingPowerTurnoutLoading,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    error: refVotingPowerTurnoutError,
+  } = useRefVotingPowerTurnout();
 
   return (
     <>
@@ -60,7 +67,17 @@ export default function OpenVis() {
 
           <hr className="border-gray-200" />
           <section className="w-full">
-            <RefVotingPowerTurnout />
+            <DataCard
+              title="Referendum Voting Power Distribution"
+              description={[
+                "The chart shows referendums ordered by voting power turnout (descending)",
+                "The orange line shows the cumulative percentage of total voting power",
+                "Steeper initial curve indicates higher inequality in voting power distribution",
+              ]}
+              isLoading={isRefVotingPowerTurnoutLoading}
+            >
+              <RefVotingPowerTurnout data={refVotingPowerTurnoutData} />
+            </DataCard>
           </section>
 
           <hr className="border-gray-200" />
