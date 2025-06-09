@@ -7,6 +7,7 @@ import {
   ErroneousRateData,
   VotesCategoryData,
   CapitalAllocationCategory,
+  ProposalTrendData,
 } from "@/types/open-gov";
 
 // Query keys
@@ -17,6 +18,7 @@ export const queryKeys = {
   erroneousRate: ["erroneous-rate"] as const,
   voterTurnoutCategory: ["voter-turnout-category"] as const,
   capitalAllocationCategory: ["capital-allocation-category"] as const,
+  proposalTrendCategory: ["proposal-trend-category"] as const,
 };
 
 // Custom hooks
@@ -68,6 +70,14 @@ export const useCapitalAllocationCategory = (options?: UseQueryOptions<CapitalAl
   return useQuery({
     queryKey: queryKeys.capitalAllocationCategory,
     queryFn: api.fetchCapitalAllocationCategory,
+    ...options,
+  });
+};
+
+export const useProposalTrendCategory = (options?: UseQueryOptions<ProposalTrendData[]>) => {
+  return useQuery({
+    queryKey: queryKeys.proposalTrendCategory,
+    queryFn: api.fetchProposalTrendCategory,
     ...options,
   });
 };

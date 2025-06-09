@@ -21,6 +21,7 @@ import {
   useCapitalAllocationCategory,
   useErroneousRate,
   useMonthlyRefs,
+  useProposalTrendCategory,
   useRefVotingPowerTurnout,
   useVoterTurnoutCategory,
   useVotingPowerInequality,
@@ -73,7 +74,7 @@ export default function OpenVis() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: voterTurnoutCategoryError,
   } = useVoterTurnoutCategory();
-  */
+
 
   const {
     data: capitalAllocationCategoryData = [],
@@ -81,6 +82,13 @@ export default function OpenVis() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: capitalAllocationCategoryError,
   } = useCapitalAllocationCategory();
+  */
+  const {
+    data: proposalTrendCategoryData = {},
+    isLoading: isProposalTrendCategoryLoading,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    error: proposalTrendCategoryError,
+  } = useProposalTrendCategory();
 
   return (
     <>
@@ -146,7 +154,6 @@ export default function OpenVis() {
               <VoterTurnoutCategory data={voterTurnoutCategoryData} />
             </DataCard>
           </section>
-          */}
 
           <hr className="border-gray-200" />
           <section className="w-full">
@@ -158,13 +165,22 @@ export default function OpenVis() {
               <CapitalAllocationCategory data={capitalAllocationCategoryData} />
             </DataCard>
           </section>
+          */}
 
-          {/*
           <hr className="border-gray-200" />
           <section className="w-full">
-            <ProposalTrendCategory />
+            <DataCard
+              title="Proposal Trends by Category Over Time"
+              description={[
+                "Track how proposal activity varies across different categories over time to identify seasonal patterns and category-specific trends.",
+                "Click on legend items to highlight specific categories.",
+              ]}
+              isLoading={isProposalTrendCategoryLoading}
+            >
+              <ProposalTrendCategory data={proposalTrendCategoryData} />
+            </DataCard>
           </section>
-
+          {/*
           <hr className="border-gray-200" />
           <section className="w-full">
             <ApprovalRateCategory />

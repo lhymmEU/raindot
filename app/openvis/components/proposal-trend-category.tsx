@@ -12,12 +12,7 @@ import {
   Legend,
   TooltipProps,
 } from "recharts";
-
-interface ProposalTrendData {
-  [categoryName: string]: {
-    [monthName: string]: number;
-  };
-}
+import type { ProposalTrendData } from "@/types/open-gov";
 
 interface ChartDataPoint {
   month: string;
@@ -36,17 +31,17 @@ interface CustomTooltipProps extends TooltipProps<number, string> {
 
 // Color palette for different categories
 const COLORS = [
-  '#3b82f6', // blue
-  '#ef4444', // red
-  '#10b981', // green
-  '#f59e0b', // yellow
-  '#8b5cf6', // purple
-  '#06b6d4', // cyan
-  '#f97316', // orange
-  '#84cc16', // lime
-  '#ec4899', // pink
-  '#6b7280', // gray
-  '#14b8a6', // teal
+  "#3b82f6", // blue
+  "#ef4444", // red
+  "#10b981", // green
+  "#f59e0b", // yellow
+  "#8b5cf6", // purple
+  "#06b6d4", // cyan
+  "#f97316", // orange
+  "#84cc16", // lime
+  "#ec4899", // pink
+  "#6b7280", // gray
+  "#14b8a6", // teal
 ];
 
 const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
@@ -65,66 +60,52 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   return null;
 };
 
-export default function ProposalTrendCategory() {
+export default function ProposalTrendCategory({
+  data,
+}: {
+  data: ProposalTrendData;
+}) {
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [proposalData, setProposalData] = useState<ProposalTrendData>({});
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Fetch data
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
-        const response = await fetch(`${baseUrl}/api/graph/proposal-trend-category`);
-        const result = await response.json();
-
-        if (result && result.data) {
-          setProposalData(result.data);
-          console.log("Proposal trend category data fetched successfully:", {
-            categories: Object.keys(result.data),
-            sampleCategory: Object.keys(result.data)[0],
-            sampleMonths: result.data[Object.keys(result.data)[0]] ? Object.keys(result.data[Object.keys(result.data)[0]]) : []
-          });
-        } else {
-          console.error("Invalid proposal trend category data format:", result);
-        }
-      } catch (err) {
-        console.error("Error fetching proposal trend category data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   // Process data for the chart - transform to time series format
   useEffect(() => {
-    if (!proposalData || Object.keys(proposalData).length === 0) return;
+    if (!data || Object.keys(data).length === 0) return;
 
     // Get unique categories and months
-    const uniqueCategories = Object.keys(proposalData);
-    
+    const uniqueCategories = Object.keys(data);
+
     // Get all unique months from all categories
     const allMonths = new Set<string>();
-    uniqueCategories.forEach(category => {
-      Object.keys(proposalData[category] || {}).forEach(month => {
+    uniqueCategories.forEach((category) => {
+      Object.keys(data[category] || {}).forEach((month) => {
         allMonths.add(month);
       });
     });
-    
+
     // Sort months in chronological order
     const uniqueMonths = Array.from(allMonths).sort((a, b) => {
       // Handle both "YYYY-MMM" format (e.g., "2023-Jun") and "MMM" format (e.g., "Jun")
       const parseMonth = (monthStr: string) => {
-        const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        
-        if (monthStr.includes('-')) {
+        const monthOrder = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+
+        if (monthStr.includes("-")) {
           // Format: "YYYY-MMM"
-          const [yearStr, monthName] = monthStr.split('-');
+          const [yearStr, monthName] = monthStr.split("-");
           const year = parseInt(yearStr);
           const monthIndex = monthOrder.indexOf(monthName);
           return { year, month: monthIndex };
@@ -134,10 +115,10 @@ export default function ProposalTrendCategory() {
           return { year: 2023, month: monthIndex }; // Default year if no year specified
         }
       };
-      
+
       const monthA = parseMonth(a);
       const monthB = parseMonth(b);
-      
+
       // Sort by year first, then by month
       if (monthA.year !== monthB.year) {
         return monthA.year - monthB.year;
@@ -148,28 +129,52 @@ export default function ProposalTrendCategory() {
     setCategories(uniqueCategories);
 
     // Create chart data structure
-    const chartData: ChartDataPoint[] = uniqueMonths.map(month => {
-      const dataPoint: ChartDataPoint = { month };
-      
-      uniqueCategories.forEach(category => {
-        const monthData = proposalData[category]?.[month];
+    const chartData: ChartDataPoint[] = uniqueMonths.map((month) => {
+      // Convert month to "YY-MM" format for display
+      const formatMonthForDisplay = (monthStr: string) => {
+        const monthNameToNumber = {
+          "Jan": "01", "Feb": "02", "Mar": "03", "Apr": "04",
+          "May": "05", "Jun": "06", "Jul": "07", "Aug": "08",
+          "Sep": "09", "Oct": "10", "Nov": "11", "Dec": "12"
+        };
+
+        if (monthStr.includes("-")) {
+          // Format: "YYYY-MMM" -> "YY-MM"
+          const [yearStr, monthName] = monthStr.split("-");
+          const year = parseInt(yearStr);
+          const shortYear = year.toString().slice(-2); // Get last 2 digits
+          const monthNumber = monthNameToNumber[monthName as keyof typeof monthNameToNumber] || "01";
+          return `${shortYear}-${monthNumber}`;
+        } else {
+          // Format: "MMM" -> assume default year and convert to "YY-MM"
+          const defaultYear = "23"; // Default to 2023
+          const monthNumber = monthNameToNumber[monthStr as keyof typeof monthNameToNumber] || "01";
+          return `${defaultYear}-${monthNumber}`;
+        }
+      };
+
+      const displayMonth = formatMonthForDisplay(month);
+      const dataPoint: ChartDataPoint = { month: displayMonth };
+
+      uniqueCategories.forEach((category) => {
+        const monthData = data[category]?.[month];
         // Use the count value, or 0 if not available
         dataPoint[category] = monthData ? monthData : 0;
       });
-      
+
       return dataPoint;
     });
 
     console.log("Chart data processed:", chartData);
     console.log("Categories:", uniqueCategories);
     setChartData(chartData);
-  }, [proposalData]);
+  }, [data]);
 
   // Handle legend click to highlight/dim lines
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleLegendClick = (data: any) => {
     const dataKey = data.dataKey || data.value;
-    if (typeof dataKey === 'string') {
+    if (typeof dataKey === "string") {
       if (selectedCategory === dataKey) {
         // If clicking the same category, deselect it
         setSelectedCategory(null);
@@ -182,17 +187,7 @@ export default function ProposalTrendCategory() {
 
   return (
     <div className="flex flex-col space-y-4 w-full">
-      <div className="flex flex-col gap-2 mb-4">
-        <h1>Proposal Trends by Category Over Time</h1>
-        <p>Insights: Track how proposal activity varies across different categories over time to identify seasonal patterns and category-specific trends.</p>
-        <p className="text-sm text-gray-600">Click on legend items to highlight specific categories.</p>
-      </div>
-
-      {loading ? (
-        <p>Loading data...</p>
-      ) : chartData.length === 0 ? (
-        <p>No data available</p>
-      ) : (
+      {data && (
         <div className="w-full h-[600px]">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
@@ -207,12 +202,12 @@ export default function ProposalTrendCategory() {
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="month" 
-                angle={-45}
-                textAnchor="end"
+              <XAxis
+                dataKey="month"
+                angle={0}
+                textAnchor="middle"
                 height={60}
-                interval={0}
+                interval={1}
               />
               <YAxis />
               <Tooltip content={<CustomTooltip />} />
@@ -221,7 +216,7 @@ export default function ProposalTrendCategory() {
                 const isSelected = selectedCategory === category;
                 const isAnySelected = selectedCategory !== null;
                 const isDimmed = isAnySelected && !isSelected;
-                
+
                 return (
                   <Line
                     key={category}
@@ -230,13 +225,13 @@ export default function ProposalTrendCategory() {
                     stroke={COLORS[index % COLORS.length]}
                     strokeWidth={isSelected ? 3 : isDimmed ? 1 : 2}
                     strokeOpacity={isDimmed ? 0.3 : 1}
-                    dot={{ 
+                    dot={{
                       r: isSelected ? 5 : isDimmed ? 2 : 4,
-                      opacity: isDimmed ? 0.3 : 1
+                      opacity: isDimmed ? 0.3 : 1,
                     }}
-                    activeDot={{ 
+                    activeDot={{
                       r: isSelected ? 8 : 6,
-                      opacity: isDimmed ? 0.5 : 1
+                      opacity: isDimmed ? 0.5 : 1,
                     }}
                   />
                 );

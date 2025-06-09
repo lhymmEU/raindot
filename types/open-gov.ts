@@ -47,3 +47,9 @@ export interface CapitalAllocationCategory {
   category: string;
   total_allocation: number;
 }
+
+export interface ProposalTrendData {
+  [categoryName: string]: {
+    [monthName: string]: number;
+  };
+}
