@@ -1,5 +1,7 @@
 "use client";
 
+import { MonthlyCount } from "@/types/open-gov";
+import { ProposeRel } from "@/types/open-gov";
 import { useEffect, useState } from "react";
 import {
   LineChart,
@@ -11,48 +13,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-// Define the type for our data items
-export interface ProposeRel {
-  rel: {
-    timestamp: string;
-  };
-}
-
-interface MonthlyCount {
-  month: string;
-  count: number;
-}
-
-export function MonthlyRefs() {
+export function MonthlyRefs({ data }: { data: ProposeRel[] }) {
   const [monthlyData, setMonthlyData] = useState<MonthlyCount[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<ProposeRel[]>([]);
-
-  // Fetch data
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        // Remove the delay as it's no longer needed
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
-        const response = await fetch(`${baseUrl}/api/graph/monthly-refs`);
-        const result = await response.json();
-
-        if (result && result.data) {
-          setData(result.data);
-          console.log("Monthly Refs data fetched successfully:", result.data.length);
-        } else {
-          console.error("Invalid response format:", result);
-        }
-      } catch (err) {
-        console.error("Error fetching monthly refs data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   // Process the data to get the monthly refs trends
   useEffect(() => {
@@ -64,7 +26,7 @@ export function MonthlyRefs() {
 
     data.forEach((item) => {
       if (!item.rel || !item.rel.timestamp) return;
-      
+
       try {
         // Parse the timestamp and format as YYYY-MM
         const date = new Date(item.rel.timestamp);
@@ -92,14 +54,8 @@ export function MonthlyRefs() {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col gap-2 mb-4">
-        <h1>Monthly Proposed Referendums</h1>
-        <p>Insights: We can share some insights here.</p>
-      </div>
       <div style={{ width: "100%", height: 400 }}>
-        {loading ? (
-          <p>Loading data...</p>
-        ) : monthlyData.length > 0 ? (
+        {monthlyData.length > 0 && (
           <ResponsiveContainer>
             <LineChart
               data={monthlyData}
@@ -124,8 +80,6 @@ export function MonthlyRefs() {
               />
             </LineChart>
           </ResponsiveContainer>
-        ) : (
-          <p>No data available</p>
         )}
       </div>
     </div>

@@ -3,21 +3,21 @@
 import Header from "@/app/components/header";
 import Hero from "@/app/components/hero";
 import Footer from "@/app/components/footer";
-import { MonthlyRefs } from "./monthly-refs";
-//import { ActiveVoters } from "./active-voters";
-import { RefVotingPowerTurnout } from "./ref-voting-power-turnout";
-//import { FortuneTeller } from "./fortune-teller";
+import { MonthlyRefs } from "./components/monthly-refs";
+import { RefVotingPowerTurnout } from "./components/ref-voting-power-turnout";
+import { VotingPowerInequality } from "./components/voting-power-inequality";
 import { getDriver } from "@/lib/driverStore";
 import { useEffect } from "react";
-import { VotingPowerInequality } from "./voting-power-inequality";
-import { ErroneousRate } from "./erroneous-rate";
-import { VoterTurnoutCategory } from "./voter-turnout-category";
-import { CapitalAllocationCategory } from "./capital-allocation-category";
-import ProposalTrendCategory from "./proposal-trend-category";
-import ApprovalRateCategory from "./approval-rate-category";
-import ApprovalAmountCategory from "./approval-amount-category";
-import TreasuryOutflow from "./treasury-outflow";
-import AddressInfo from "./address-info";
+import { ErroneousRate } from "./components/erroneous-rate";
+import { VoterTurnoutCategory } from "./components/voter-turnout-category";
+import { CapitalAllocationCategory } from "./components/capital-allocation-category";
+import ProposalTrendCategory from "./components/proposal-trend-category";
+import ApprovalRateCategory from "./components/approval-rate-category";
+import ApprovalAmountCategory from "./components/approval-amount-category";
+import TreasuryOutflow from "./components/treasury-outflow";
+import AddressInfo from "./components/address-info";
+import DataCard from "./components/data-card";
+import { useMonthlyRefs } from "@/hooks/useOpenGovQueries";
 
 export default function OpenVis() {
   // Initialize the driver in useEffect to ensure it runs only on the client
@@ -32,33 +32,30 @@ export default function OpenVis() {
       });
   }, []);
 
+  const {
+    data: refData = [],
+    isLoading: isMonthlyRefsLoading,
+    error,
+  } = useMonthlyRefs();
+
+  if (error) {
+    console.error("Error fetching data:", error);
+  }
+
   return (
     <>
       <Header />
       <Hero title="OpenVis" description="Visualizing OpenGov data." />
       <div className="py-[50px] px-[68px]">
         <div className="flex flex-col gap-12">
-          {/*
-          <hr className="border-gray-200" />
-          
           <section className="w-full">
-            <ActiveVoters />
-          </section>
-          
-          <hr className="border-gray-200" />
-          
-          <section className="w-full">
-            <RefVotingPowerTurnout />
-          </section>
-          
-          <hr className="border-gray-200" />
-          <section className="w-full">
-            <FortuneTeller />
-          </section>
-          */}
-
-          <section className="w-full">
-            <MonthlyRefs />
+            <DataCard
+              title="Monthly Refs"
+              description="Visualizing the number of proposals submitted each month."
+              isLoading={isMonthlyRefsLoading}
+            >
+              <MonthlyRefs data={refData} />
+            </DataCard>
           </section>
 
           <hr className="border-gray-200" />
