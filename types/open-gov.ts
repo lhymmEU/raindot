@@ -17,3 +17,9 @@ export interface RefVotingPowerTurnout {
   voteCounts: number;
   totalVotingPowerTurnout: number;
 }
+
+export interface VotingPowerInequality {
+  walletAddress: string;
+  name: string;
+  totalVotingPower: number;
+}

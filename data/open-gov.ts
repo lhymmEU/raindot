@@ -1,4 +1,8 @@
-import { ProposeRel, RefVotingPowerTurnout } from "@/types/open-gov";
+import {
+  ProposeRel,
+  RefVotingPowerTurnout,
+  VotingPowerInequality,
+} from "@/types/open-gov";
 
 const baseUrl =
   typeof window !== "undefined"
@@ -27,3 +31,5 @@ export const fetchMonthlyRefs = () =>
   fetcher<ProposeRel[]>("/api/graph/monthly-refs");
 export const fetchRefVotingPowerTurnout = () =>
   fetcher<RefVotingPowerTurnout[]>("/api/graph/ref-voting-power");
+export const fetchVotingPowerInequality = () =>
+  fetcher<VotingPowerInequality[]>("/api/graph/voting-power-inequality");

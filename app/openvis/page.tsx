@@ -20,6 +20,7 @@ import DataCard from "./components/data-card";
 import {
   useMonthlyRefs,
   useRefVotingPowerTurnout,
+  useVotingPowerInequality,
 } from "@/hooks/useOpenGovQueries";
 
 export default function OpenVis() {
@@ -48,6 +49,13 @@ export default function OpenVis() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: refVotingPowerTurnoutError,
   } = useRefVotingPowerTurnout();
+
+  const {
+    data: votingPowerInequalityData = [],
+    isLoading: isVotingPowerInequalityLoading,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    error: votingPowerInequalityError,
+  } = useVotingPowerInequality();
 
   return (
     <>
@@ -82,9 +90,16 @@ export default function OpenVis() {
 
           <hr className="border-gray-200" />
           <section className="w-full">
-            <VotingPowerInequality />
+            <DataCard
+              title="Voting Power Inequality"
+              description="Visualizing the inequality in voting power distribution."
+              isLoading={isVotingPowerInequalityLoading}
+            >
+              <VotingPowerInequality data={votingPowerInequalityData} />
+            </DataCard>
           </section>
 
+          {/*
           <hr className="border-gray-200" />
           <section className="w-full">
             <ErroneousRate />
@@ -124,6 +139,7 @@ export default function OpenVis() {
           <section className="w-full">
             <TreasuryOutflow />
           </section>
+          */}
         </div>
       </div>
       <Footer />
