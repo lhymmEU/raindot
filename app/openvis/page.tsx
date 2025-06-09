@@ -18,6 +18,7 @@ import TreasuryOutflow from "./components/treasury-outflow";
 import AddressInfo from "./components/address-info";
 import DataCard from "./components/data-card";
 import {
+  useCapitalAllocationCategory,
   useErroneousRate,
   useMonthlyRefs,
   useRefVotingPowerTurnout,
@@ -65,13 +66,21 @@ export default function OpenVis() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: erroneousRateError,
   } = useErroneousRate();
-  */
+
   const {
     data: voterTurnoutCategoryData = [],
     isLoading: isVoterTurnoutCategoryLoading,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: voterTurnoutCategoryError,
   } = useVoterTurnoutCategory();
+  */
+
+  const {
+    data: capitalAllocationCategoryData = [],
+    isLoading: isCapitalAllocationCategoryLoading,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    error: capitalAllocationCategoryError,
+  } = useCapitalAllocationCategory();
 
   return (
     <>
@@ -126,7 +135,6 @@ export default function OpenVis() {
               <ErroneousRate data={erroneousRateData} />
             </DataCard>
           </section>
-          */}
 
           <hr className="border-gray-200" />
           <section className="w-full">
@@ -138,13 +146,20 @@ export default function OpenVis() {
               <VoterTurnoutCategory data={voterTurnoutCategoryData} />
             </DataCard>
           </section>
+          */}
 
-          {/*
           <hr className="border-gray-200" />
           <section className="w-full">
-            <CapitalAllocationCategory />
+            <DataCard
+              title="Capital Allocation by Category"
+              description="See the percentage breakdown of capital allocation across different proposal categories to understand funding distribution patterns."
+              isLoading={isCapitalAllocationCategoryLoading}
+            >
+              <CapitalAllocationCategory data={capitalAllocationCategoryData} />
+            </DataCard>
           </section>
 
+          {/*
           <hr className="border-gray-200" />
           <section className="w-full">
             <ProposalTrendCategory />

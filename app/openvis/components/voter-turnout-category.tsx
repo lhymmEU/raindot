@@ -9,7 +9,7 @@ import {
   Tooltip,
   TooltipProps,
 } from "recharts";
-import type { CategoryData } from "@/types/open-gov";
+import type { VotesCategoryData } from "@/types/open-gov";
 
 interface ChartDataPoint {
   category: string;
@@ -54,7 +54,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
   return null;
 };
 
-export function VoterTurnoutCategory({ data }: { data: CategoryData[] }) {
+export function VoterTurnoutCategory({ data }: { data: VotesCategoryData[] }) {
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
 
   // Process data for the chart - calculate percentages

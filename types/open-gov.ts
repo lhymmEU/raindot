@@ -38,7 +38,12 @@ export interface CountData {
   timestamp: string;
 }
 
-export interface CategoryData {
+export interface VotesCategoryData {
   category: string;
   total_votes: number | { low: number; high: number };
+}
+
+export interface CapitalAllocationCategory {
+  category: string;
+  total_allocation: number;
 }
