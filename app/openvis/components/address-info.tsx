@@ -233,8 +233,13 @@ export default function AddressInfo() {
   return (
     <div className="w-full">
       <div className="flex flex-col gap-2 mb-6">
-        <h1>Address Funding Information</h1>
-        <p>Search for detailed funding information and proposal history for any Polkadot governance address.</p>
+        <h1 className="text-gray-400">Address Funding Information (Beta)</h1>
+        <p className="text-gray-500">Search for detailed funding information and proposal history for any Polkadot governance address.</p>
+        <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
+          <p className="text-yellow-700 text-sm">
+            ⚠️ This feature is still under development. Data returned might not reflect the latest state of the network. Please use with caution.
+          </p>
+        </div>
       </div>
 
       {/* Search Section */}

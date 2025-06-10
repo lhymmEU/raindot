@@ -42,7 +42,7 @@ export default function OpenVis() {
         console.error("Failed to initialize driver:", error);
       });
   }, []);
-  /*
+
   const {
     data: refData = [],
     isLoading: isMonthlyRefsLoading,
@@ -78,7 +78,6 @@ export default function OpenVis() {
     error: voterTurnoutCategoryError,
   } = useVoterTurnoutCategory();
 
-
   const {
     data: capitalAllocationCategoryData = [],
     isLoading: isCapitalAllocationCategoryLoading,
@@ -93,7 +92,6 @@ export default function OpenVis() {
     error: proposalTrendCategoryError,
   } = useProposalTrendCategory();
 
-
   const {
     data: approvalRateCategoryData = [],
     isLoading: isApprovalRateCategoryLoading,
@@ -101,14 +99,12 @@ export default function OpenVis() {
     error: approvalRateCategoryError,
   } = useApprovalRateCategory();
 
-
   const {
     data: approvalAmountCategoryData = [],
     isLoading: isApprovalAmountCategoryLoading,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: approvalAmountCategoryError,
   } = useApprovalAmountCategory();
-        */
 
   const {
     data: treasuryOutflowData = { initiativeData: [], functionalData: [] },
@@ -123,7 +119,17 @@ export default function OpenVis() {
       <Hero title="OpenVis" description="Visualizing OpenGov data." />
       <div className="py-[50px] px-[68px]">
         <div className="flex flex-col gap-12">
-          {/*
+          <section className="w-full">
+            <DataCard
+              title="Treasury Outflow Analysis"
+              description="Visualize the flow of treasury funds to different initiative and functional categories, showing the distribution and magnitude of treasury allocations."
+              isLoading={isTreasuryOutflowLoading}
+            >
+              <TreasuryOutflow data={treasuryOutflowData} />
+            </DataCard>
+          </section>
+          
+          <hr className="border-gray-200" />
           <section className="w-full">
             <DataCard
               title="Monthly Refs"
@@ -232,17 +238,6 @@ export default function OpenVis() {
           <hr className="border-gray-200" />
           <section className="w-full">
             <AddressInfo />
-          </section>
-          */}
-          <hr className="border-gray-200" />
-          <section className="w-full">
-            <DataCard
-              title="Treasury Outflow Analysis"
-              description="Visualize the flow of treasury funds to different initiative and functional categories, showing the distribution and magnitude of treasury allocations."
-              isLoading={isTreasuryOutflowLoading}
-            >
-              <TreasuryOutflow data={treasuryOutflowData} />
-            </DataCard>
           </section>
         </div>
       </div>
