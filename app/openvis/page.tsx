@@ -18,6 +18,7 @@ import TreasuryOutflow from "./components/treasury-outflow";
 import AddressInfo from "./components/address-info";
 import DataCard from "./components/data-card";
 import {
+  useApprovalAmountCategory,
   useApprovalRateCategory,
   useCapitalAllocationCategory,
   useErroneousRate,
@@ -90,7 +91,7 @@ export default function OpenVis() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: proposalTrendCategoryError,
   } = useProposalTrendCategory();
-     */
+
 
   const {
     data: approvalRateCategoryData = [],
@@ -98,6 +99,14 @@ export default function OpenVis() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: approvalRateCategoryError,
   } = useApprovalRateCategory();
+     */
+
+  const {
+    data: approvalAmountCategoryData = [],
+    isLoading: isApprovalAmountCategoryLoading,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    error: approvalAmountCategoryError,
+  } = useApprovalAmountCategory();
 
   return (
     <>
@@ -188,7 +197,7 @@ export default function OpenVis() {
               <ProposalTrendCategory data={proposalTrendCategoryData} />
             </DataCard>
           </section>
-          */}
+
           <hr className="border-gray-200" />
           <section className="w-full">
             <DataCard
@@ -199,13 +208,19 @@ export default function OpenVis() {
               <ApprovalRateCategory data={approvalRateCategoryData} />
             </DataCard>
           </section>
+          */}
 
-          {/*
           <hr className="border-gray-200" />
           <section className="w-full">
-            <ApprovalAmountCategory />
+            <DataCard
+              title="Approval Amount by Category"
+              description="Compare total approved funding amounts across different proposal categories to identify which categories receive the most financial support."
+              isLoading={isApprovalAmountCategoryLoading}
+            >
+              <ApprovalAmountCategory data={approvalAmountCategoryData} />
+            </DataCard>
           </section>
-
+          {/*
           <hr className="border-gray-200" />
           <section className="w-full">
             <AddressInfo />

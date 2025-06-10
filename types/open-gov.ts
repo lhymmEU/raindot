@@ -57,3 +57,7 @@ export interface ProposalTrendData {
 export interface ApprovalRateData {
   [categoryName: string]: number;
 }
+
+export interface ApprovalAmountData {
+  [categoryName: string]: number;
+}

@@ -11,10 +11,7 @@ import {
   ResponsiveContainer,
   TooltipProps,
 } from "recharts";
-
-interface ApprovalAmountData {
-  [categoryName: string]: number;
-}
+import type { ApprovalAmountData } from "@/types/open-gov";
 
 interface ChartDataPoint {
   category: string;
@@ -36,7 +33,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     const approvalAmount = payload[0]?.value || 0;
     const formattedAmount = formatAmount(approvalAmount);
-    
+
     return (
       <div className="bg-white p-3 border border-gray-300 rounded shadow-lg">
         <p className="font-semibold">{`Category: ${label}`}</p>
@@ -62,55 +59,29 @@ const formatAmount = (amount: number): string => {
   }
 };
 
-export default function ApprovalAmountCategory() {
+export default function ApprovalAmountCategory({
+  data,
+}: {
+  data: ApprovalAmountData[];
+}) {
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [approvalData, setApprovalData] = useState<ApprovalAmountData>({});
-
-  // Fetch data
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
-        const response = await fetch(`${baseUrl}/api/graph/approval-amount-category`);
-        const result = await response.json();
-
-        if (result && result.data) {
-          setApprovalData(result.data);
-          console.log("Approval amount category data fetched successfully:", {
-            categories: Object.keys(result.data),
-            sampleAmounts: Object.values(result.data).slice(0, 3)
-          });
-        } else {
-          console.error("Invalid approval amount category data format:", result);
-        }
-      } catch (err) {
-        console.error("Error fetching approval amount category data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   // Process data for the chart
   useEffect(() => {
-    if (!approvalData || Object.keys(approvalData).length === 0) return;
+    if (!data || Object.keys(data).length === 0) return;
 
     // Transform data for bar chart
-    const chartData: ChartDataPoint[] = Object.entries(approvalData)
+    const chartData: ChartDataPoint[] = Object.entries(data)
       .map(([category, amount]) => ({
         category,
-        approvalAmount: amount,
-        formattedAmount: formatAmount(amount)
+        approvalAmount: Number(amount),
+        formattedAmount: formatAmount(Number(amount)),
       }))
       .sort((a, b) => b.approvalAmount - a.approvalAmount); // Sort by approval amount descending
 
     console.log("Chart data processed:", chartData);
     setChartData(chartData);
-  }, [approvalData]);
+  }, [data]);
 
   // Custom label formatter for Y-axis (show formatted amounts)
   const formatYAxisLabel = (value: number) => {
@@ -119,16 +90,7 @@ export default function ApprovalAmountCategory() {
 
   return (
     <div className="flex flex-col space-y-4 w-full">
-      <div className="flex flex-col gap-2 mb-4">
-        <h1>Approval Amount by Category</h1>
-        <p>Insights: Compare total approved funding amounts across different proposal categories to identify which categories receive the most financial support.</p>
-      </div>
-
-      {loading ? (
-        <p>Loading data...</p>
-      ) : chartData.length === 0 ? (
-        <p>No data available</p>
-      ) : (
+      {chartData.length > 0 && (
         <div className="w-full h-[600px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -143,19 +105,17 @@ export default function ApprovalAmountCategory() {
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="category" 
+              <XAxis
+                dataKey="category"
                 angle={-45}
                 textAnchor="end"
                 height={80}
                 interval={0}
               />
-              <YAxis 
-                tickFormatter={formatYAxisLabel}
-              />
+              <YAxis tickFormatter={formatYAxisLabel} />
               <Tooltip content={<CustomTooltip />} />
-              <Bar 
-                dataKey="approvalAmount" 
+              <Bar
+                dataKey="approvalAmount"
                 fill="#10b981"
                 radius={[4, 4, 0, 0]}
               />

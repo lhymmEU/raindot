@@ -7,6 +7,7 @@ import {
   CapitalAllocationCategory,
   ProposalTrendData,
   ApprovalRateData,
+  ApprovalAmountData,
 } from "@/types/open-gov";
 
 const baseUrl =
@@ -48,3 +49,5 @@ export const fetchProposalTrendCategory = () =>
   fetcher<ProposalTrendData[]>("/api/graph/proposal-trend-category");
 export const fetchApprovalRateCategory = () =>
   fetcher<ApprovalRateData[]>("/api/graph/approval-rate-category");
+export const fetchApprovalAmountCategory = () =>
+  fetcher<ApprovalAmountData[]>("/api/graph/approval-amount-category");
