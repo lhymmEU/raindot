@@ -61,3 +61,15 @@ export interface ApprovalRateData {
 export interface ApprovalAmountData {
   [categoryName: string]: number;
 }
+
+export interface InitiativeType {
+  category: "New" | "Existing" | "Compensation" | "Protocol";
+  amount: number;
+  refs: number[];
+}
+
+export interface FunctionalType {
+  category: "Marketing" | "Product" | "Event" | "EducationAndResearch" | "BD" | "Security";
+  amount: number;
+  refs: number[];
+}

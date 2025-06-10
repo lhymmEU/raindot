@@ -10,6 +10,8 @@ import {
   ProposalTrendData,
   ApprovalRateData,
   ApprovalAmountData,
+  InitiativeType,
+  FunctionalType,
 } from "@/types/open-gov";
 
 // Query keys
@@ -23,6 +25,7 @@ export const queryKeys = {
   proposalTrendCategory: ["proposal-trend-category"] as const,
   approvalRateCategory: ["approval-rate-category"] as const,
   approvalAmountCategory: ["approval-amount-category"] as const,
+  treasuryOutflow: ["treasury-outflow"] as const,
 };
 
 // Custom hooks
@@ -98,6 +101,14 @@ export const useApprovalAmountCategory = (options?: UseQueryOptions<ApprovalAmou
   return useQuery({
     queryKey: queryKeys.approvalAmountCategory,
     queryFn: api.fetchApprovalAmountCategory,
+    ...options,
+  });
+};
+
+export const useTreasuryOutflow = (options?: UseQueryOptions<{ initiativeData: InitiativeType[]; functionalData: FunctionalType[] }>) => {
+  return useQuery({
+    queryKey: queryKeys.treasuryOutflow,
+    queryFn: api.fetchTreasuryOutflow,
     ...options,
   });
 };

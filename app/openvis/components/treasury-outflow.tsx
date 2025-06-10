@@ -7,18 +7,7 @@ import {
   sankeyLinkHorizontal, 
   sankeyJustify
 } from "d3-sankey";
-
-interface InitiativeType {
-  category: "New" | "Existing" | "Compensation" | "Protocol";
-  amount: number;
-  refs: number[];
-}
-
-interface FunctionalType {
-  category: "Marketing" | "Product" | "Event" | "EducationAndResearch" | "BD" | "Security";
-  amount: number;
-  refs: number[];
-}
+import { InitiativeType, FunctionalType } from "@/types/open-gov";
 
 interface SankeyNodeData {
   name: string;
@@ -97,43 +86,11 @@ const formatAmount = (amount: number): string => {
   }
 };
 
-export default function TreasuryOutflow() {
-  const [initiativeData, setInitiativeData] = useState<InitiativeType[]>([]);
-  const [functionalData, setFunctionalData] = useState<FunctionalType[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function TreasuryOutflow({ data }: { data: { initiativeData: InitiativeType[]; functionalData: FunctionalType[] } }) {
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const initiativeSvgRef = useRef<SVGSVGElement>(null);
   const functionalSvgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // Fetch data from API
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
-        const response = await fetch(`${baseUrl}/api/graph/treasury-outflow`);
-        const result = await response.json();
-
-        if (result && result.initiativeData && result.functionalData) {
-          setInitiativeData(result.initiativeData);
-          setFunctionalData(result.functionalData);
-          console.log("Treasury outflow data fetched successfully:", {
-            initiative: result.initiativeData,
-            functional: result.functionalData
-          });
-        } else {
-          console.error("Invalid treasury outflow data format:", result);
-        }
-      } catch (err) {
-        console.error("Error fetching treasury outflow data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   // Function to create Sankey chart
   const createSankeyChart = (
@@ -299,27 +256,18 @@ export default function TreasuryOutflow() {
 
   // Create and render Sankey charts
   useEffect(() => {
-    createSankeyChart(initiativeSvgRef, initiativeData, INITIATIVE_COLORS);
+    createSankeyChart(initiativeSvgRef, data.initiativeData, INITIATIVE_COLORS);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initiativeData, tooltip]);
+  }, [data.initiativeData, tooltip]);
 
   useEffect(() => {
-    createSankeyChart(functionalSvgRef, functionalData, FUNCTIONAL_COLORS);
+    createSankeyChart(functionalSvgRef, data.functionalData, FUNCTIONAL_COLORS);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [functionalData, tooltip]);
+  }, [data.functionalData, tooltip]);
 
   return (
     <div className="flex flex-col space-y-6 w-full" ref={containerRef}>
-      <div className="flex flex-col gap-2 mb-4">
-        <h1 className="text-2xl font-bold">Treasury Outflow Analysis</h1>
-        <p className="text-gray-600">Visualize the flow of treasury funds to different initiative and functional categories, showing the distribution and magnitude of treasury allocations.</p>
-      </div>
-
-      {loading ? (
-        <p>Loading data...</p>
-      ) : (initiativeData.length === 0 && functionalData.length === 0) ? (
-        <p>No data available</p>
-      ) : (
+      {data.initiativeData.length > 0 && data.functionalData.length > 0 && (
         <div className="w-full">
           {/* Two Sankey charts displayed horizontally */}
           <div className="flex flex-col lg:flex-row gap-8">

@@ -25,6 +25,7 @@ import {
   useMonthlyRefs,
   useProposalTrendCategory,
   useRefVotingPowerTurnout,
+  useTreasuryOutflow,
   useVoterTurnoutCategory,
   useVotingPowerInequality,
 } from "@/hooks/useOpenGovQueries";
@@ -99,7 +100,7 @@ export default function OpenVis() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: approvalRateCategoryError,
   } = useApprovalRateCategory();
-     */
+
 
   const {
     data: approvalAmountCategoryData = [],
@@ -107,6 +108,14 @@ export default function OpenVis() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: approvalAmountCategoryError,
   } = useApprovalAmountCategory();
+        */
+
+  const {
+    data: treasuryOutflowData = { initiativeData: [], functionalData: [] },
+    isLoading: isTreasuryOutflowLoading,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    error: treasuryOutflowError,
+  } = useTreasuryOutflow();
 
   return (
     <>
@@ -208,7 +217,6 @@ export default function OpenVis() {
               <ApprovalRateCategory data={approvalRateCategoryData} />
             </DataCard>
           </section>
-          */}
 
           <hr className="border-gray-200" />
           <section className="w-full">
@@ -220,17 +228,22 @@ export default function OpenVis() {
               <ApprovalAmountCategory data={approvalAmountCategoryData} />
             </DataCard>
           </section>
-          {/*
+
           <hr className="border-gray-200" />
           <section className="w-full">
             <AddressInfo />
           </section>
-
+          */}
           <hr className="border-gray-200" />
           <section className="w-full">
-            <TreasuryOutflow />
+            <DataCard
+              title="Treasury Outflow Analysis"
+              description="Visualize the flow of treasury funds to different initiative and functional categories, showing the distribution and magnitude of treasury allocations."
+              isLoading={isTreasuryOutflowLoading}
+            >
+              <TreasuryOutflow data={treasuryOutflowData} />
+            </DataCard>
           </section>
-          */}
         </div>
       </div>
       <Footer />
