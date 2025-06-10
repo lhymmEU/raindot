@@ -7,7 +7,7 @@ import { MonthlyRefs } from "./components/monthly-refs";
 import { RefVotingPowerTurnout } from "./components/ref-voting-power-turnout";
 import { VotingPowerInequality } from "./components/voting-power-inequality";
 import { getDriver } from "@/lib/driverStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ErroneousRate } from "./components/erroneous-rate";
 import { VoterTurnoutCategory } from "./components/voter-turnout-category";
 import { CapitalAllocationCategory } from "./components/capital-allocation-category";
@@ -30,7 +30,11 @@ import {
   useVotingPowerInequality,
 } from "@/hooks/useOpenGovQueries";
 
+type TabType = "system-health" | "refs-voting-info" | "lab";
+
 export default function OpenVis() {
+  const [activeTab, setActiveTab] = useState<TabType>("system-health");
+
   // Initialize the driver in useEffect to ensure it runs only on the client
   useEffect(() => {
     // Initialize the singleton driver
@@ -113,134 +117,198 @@ export default function OpenVis() {
     error: treasuryOutflowError,
   } = useTreasuryOutflow();
 
+  const tabs = [
+    { id: "system-health" as TabType, label: "OpenGov System Health" },
+    { id: "refs-voting-info" as TabType, label: "Refs & Voting Info" },
+    { id: "lab" as TabType, label: "Lab" },
+  ];
+
+  const renderSystemHealthContent = () => (
+    <div className="flex flex-col gap-12 animate-in fade-in-0 duration-500">
+      <section className="w-full">
+        <DataCard
+          title="Treasury Outflow Analysis"
+          description="Visualize the flow of treasury funds to different initiative and functional categories, showing the distribution and magnitude of treasury allocations."
+          isLoading={isTreasuryOutflowLoading}
+        >
+          <TreasuryOutflow data={treasuryOutflowData} />
+        </DataCard>
+      </section>
+
+      <hr className="border-gray-200" />
+      <section className="w-full">
+        <DataCard
+          title="Capital Allocation by Category"
+          description="See the percentage breakdown of capital allocation across different proposal categories to understand funding distribution patterns."
+          isLoading={isCapitalAllocationCategoryLoading}
+        >
+          <CapitalAllocationCategory data={capitalAllocationCategoryData} />
+        </DataCard>
+      </section>
+
+      <hr className="border-gray-200" />
+      <section className="w-full">
+        <DataCard
+          title="Approval Amount by Category"
+          description="Compare total approved funding amounts across different proposal categories to identify which categories receive the most financial support."
+          isLoading={isApprovalAmountCategoryLoading}
+        >
+          <ApprovalAmountCategory data={approvalAmountCategoryData} />
+        </DataCard>
+      </section>
+
+      <hr className="border-gray-200" />
+      <section className="w-full">
+        <DataCard
+          title="Monthly Refs"
+          description="Visualizing the number of proposals submitted each month."
+          isLoading={isMonthlyRefsLoading}
+        >
+          <MonthlyRefs data={refData} />
+        </DataCard>
+      </section>
+
+      <hr className="border-gray-200" />
+      <section className="w-full">
+        <DataCard
+          title="Voting Power Inequality"
+          description="Visualizing the inequality in voting power distribution."
+          isLoading={isVotingPowerInequalityLoading}
+        >
+          <VotingPowerInequality data={votingPowerInequalityData} />
+        </DataCard>
+      </section>
+
+      <hr className="border-gray-200" />
+      <section className="w-full">
+        <DataCard
+          title="Erroneous Rate Over Time"
+          description="Track the percentage of erroneous proposals per month to identify users familiarity with the OpenGov system."
+          isLoading={isErroneousRateLoading}
+        >
+          <ErroneousRate data={erroneousRateData} />
+        </DataCard>
+      </section>
+    </div>
+  );
+
+  const renderRefsVotingInfoContent = () => (
+    <div className="flex flex-col gap-12 animate-in fade-in-0 duration-500">
+      <section className="w-full">
+        <DataCard
+          title="Proposal Trends by Category Over Time"
+          description={[
+            "Track how proposal activity varies across different categories over time to identify seasonal patterns and category-specific trends.",
+            "Click on legend items to highlight specific categories.",
+          ]}
+          isLoading={isProposalTrendCategoryLoading}
+        >
+          <ProposalTrendCategory data={proposalTrendCategoryData} />
+        </DataCard>
+      </section>
+
+      <hr className="border-gray-200" />
+      <section className="w-full">
+        <DataCard
+          title="Referendum Voting Power Distribution"
+          description={[
+            "The chart shows referendums ordered by voting power turnout (descending)",
+            "The orange line shows the cumulative percentage of total voting power",
+            "Steeper initial curve indicates higher inequality in voting power distribution",
+          ]}
+          isLoading={isRefVotingPowerTurnoutLoading}
+        >
+          <RefVotingPowerTurnout data={refVotingPowerTurnoutData} />
+        </DataCard>
+      </section>
+
+      <hr className="border-gray-200" />
+      <section className="w-full">
+        <DataCard
+          title="Vote Distribution by Category"
+          description="See the percentage breakdown of votes across different proposal categories to understand community engagement patterns."
+          isLoading={isVoterTurnoutCategoryLoading}
+        >
+          <VoterTurnoutCategory data={voterTurnoutCategoryData} />
+        </DataCard>
+      </section>
+
+      <hr className="border-gray-200" />
+      <section className="w-full">
+        <DataCard
+          title="Vote Distribution by Category"
+          description="See the percentage breakdown of votes across different proposal categories to understand community engagement patterns."
+          isLoading={isVoterTurnoutCategoryLoading}
+        >
+          <VoterTurnoutCategory data={voterTurnoutCategoryData} />
+        </DataCard>
+      </section>
+
+      <hr className="border-gray-200" />
+      <section className="w-full">
+        <DataCard
+          title="Approval Rate by Category"
+          description="Compare approval rates across different proposal categories to identify which types of proposals have higher success rates."
+          isLoading={isApprovalRateCategoryLoading}
+        >
+          <ApprovalRateCategory data={approvalRateCategoryData} />
+        </DataCard>
+      </section>
+    </div>
+  );
+
+  const renderLabContent = () => (
+    <div className="flex flex-col gap-12 animate-in fade-in-0 duration-500">
+      <section className="w-full">
+        <AddressInfo />
+      </section>
+    </div>
+  );
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "system-health":
+        return renderSystemHealthContent();
+      case "refs-voting-info":
+        return renderRefsVotingInfoContent();
+      case "lab":
+        return renderLabContent();
+      default:
+        return renderSystemHealthContent();
+    }
+  };
+
   return (
     <>
       <Header />
       <Hero title="OpenVis" description="Visualizing OpenGov data." />
-      <div className="py-[50px] px-[68px]">
-        <div className="flex flex-col gap-12">
-          <section className="w-full">
-            <DataCard
-              title="Treasury Outflow Analysis"
-              description="Visualize the flow of treasury funds to different initiative and functional categories, showing the distribution and magnitude of treasury allocations."
-              isLoading={isTreasuryOutflowLoading}
-            >
-              <TreasuryOutflow data={treasuryOutflowData} />
-            </DataCard>
-          </section>
-          
-          <hr className="border-gray-200" />
-          <section className="w-full">
-            <DataCard
-              title="Monthly Refs"
-              description="Visualizing the number of proposals submitted each month."
-              isLoading={isMonthlyRefsLoading}
-            >
-              <MonthlyRefs data={refData} />
-            </DataCard>
-          </section>
 
-          <hr className="border-gray-200" />
-          <section className="w-full">
-            <DataCard
-              title="Referendum Voting Power Distribution"
-              description={[
-                "The chart shows referendums ordered by voting power turnout (descending)",
-                "The orange line shows the cumulative percentage of total voting power",
-                "Steeper initial curve indicates higher inequality in voting power distribution",
-              ]}
-              isLoading={isRefVotingPowerTurnoutLoading}
-            >
-              <RefVotingPowerTurnout data={refVotingPowerTurnoutData} />
-            </DataCard>
-          </section>
-
-          <hr className="border-gray-200" />
-          <section className="w-full">
-            <DataCard
-              title="Voting Power Inequality"
-              description="Visualizing the inequality in voting power distribution."
-              isLoading={isVotingPowerInequalityLoading}
-            >
-              <VotingPowerInequality data={votingPowerInequalityData} />
-            </DataCard>
-          </section>
-
-          <hr className="border-gray-200" />
-          <section className="w-full">
-            <DataCard
-              title="Erroneous Rate Over Time"
-              description="Track the percentage of erroneous proposals per month to identify users familiarity with the OpenGov system."
-              isLoading={isErroneousRateLoading}
-            >
-              <ErroneousRate data={erroneousRateData} />
-            </DataCard>
-          </section>
-
-          <hr className="border-gray-200" />
-          <section className="w-full">
-            <DataCard
-              title="Vote Distribution by Category"
-              description="See the percentage breakdown of votes across different proposal categories to understand community engagement patterns."
-              isLoading={isVoterTurnoutCategoryLoading}
-            >
-              <VoterTurnoutCategory data={voterTurnoutCategoryData} />
-            </DataCard>
-          </section>
-
-          <hr className="border-gray-200" />
-          <section className="w-full">
-            <DataCard
-              title="Capital Allocation by Category"
-              description="See the percentage breakdown of capital allocation across different proposal categories to understand funding distribution patterns."
-              isLoading={isCapitalAllocationCategoryLoading}
-            >
-              <CapitalAllocationCategory data={capitalAllocationCategoryData} />
-            </DataCard>
-          </section>
-
-          <hr className="border-gray-200" />
-          <section className="w-full">
-            <DataCard
-              title="Proposal Trends by Category Over Time"
-              description={[
-                "Track how proposal activity varies across different categories over time to identify seasonal patterns and category-specific trends.",
-                "Click on legend items to highlight specific categories.",
-              ]}
-              isLoading={isProposalTrendCategoryLoading}
-            >
-              <ProposalTrendCategory data={proposalTrendCategoryData} />
-            </DataCard>
-          </section>
-
-          <hr className="border-gray-200" />
-          <section className="w-full">
-            <DataCard
-              title="Approval Rate by Category"
-              description="Compare approval rates across different proposal categories to identify which types of proposals have higher success rates."
-              isLoading={isApprovalRateCategoryLoading}
-            >
-              <ApprovalRateCategory data={approvalRateCategoryData} />
-            </DataCard>
-          </section>
-
-          <hr className="border-gray-200" />
-          <section className="w-full">
-            <DataCard
-              title="Approval Amount by Category"
-              description="Compare total approved funding amounts across different proposal categories to identify which categories receive the most financial support."
-              isLoading={isApprovalAmountCategoryLoading}
-            >
-              <ApprovalAmountCategory data={approvalAmountCategoryData} />
-            </DataCard>
-          </section>
-
-          <hr className="border-gray-200" />
-          <section className="w-full">
-            <AddressInfo />
-          </section>
+      {/* Sticky Tab Navigation */}
+      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
+        <div className="px-[68px] py-4">
+          <nav className="flex space-x-8">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 ease-in-out rounded-lg hover:bg-gray-50 ${
+                  activeTab === tab.id
+                    ? "text-blue-600 bg-blue-50"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                {tab.label}
+                {activeTab === tab.id && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full transform transition-all duration-300 ease-in-out" />
+                )}
+              </button>
+            ))}
+          </nav>
         </div>
       </div>
+
+      <div className="py-[50px] px-[68px]">{renderContent()}</div>
+
       <Footer />
     </>
   );
