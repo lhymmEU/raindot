@@ -53,3 +53,7 @@ export interface ProposalTrendData {
     [monthName: string]: number;
   };
 }
+
+export interface ApprovalRateData {
+  [categoryName: string]: number;
+}

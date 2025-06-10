@@ -8,6 +8,7 @@ import {
   VotesCategoryData,
   CapitalAllocationCategory,
   ProposalTrendData,
+  ApprovalRateData,
 } from "@/types/open-gov";
 
 // Query keys
@@ -19,6 +20,7 @@ export const queryKeys = {
   voterTurnoutCategory: ["voter-turnout-category"] as const,
   capitalAllocationCategory: ["capital-allocation-category"] as const,
   proposalTrendCategory: ["proposal-trend-category"] as const,
+  approvalRateCategory: ["approval-rate-category"] as const,
 };
 
 // Custom hooks
@@ -78,6 +80,14 @@ export const useProposalTrendCategory = (options?: UseQueryOptions<ProposalTrend
   return useQuery({
     queryKey: queryKeys.proposalTrendCategory,
     queryFn: api.fetchProposalTrendCategory,
+    ...options,
+  });
+};
+
+export const useApprovalRateCategory = (options?: UseQueryOptions<ApprovalRateData[]>) => {
+  return useQuery({
+    queryKey: queryKeys.approvalRateCategory,
+    queryFn: api.fetchApprovalRateCategory,
     ...options,
   });
 };

@@ -18,6 +18,7 @@ import TreasuryOutflow from "./components/treasury-outflow";
 import AddressInfo from "./components/address-info";
 import DataCard from "./components/data-card";
 import {
+  useApprovalRateCategory,
   useCapitalAllocationCategory,
   useErroneousRate,
   useMonthlyRefs,
@@ -82,13 +83,21 @@ export default function OpenVis() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: capitalAllocationCategoryError,
   } = useCapitalAllocationCategory();
-  */
+
   const {
     data: proposalTrendCategoryData = {},
     isLoading: isProposalTrendCategoryLoading,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: proposalTrendCategoryError,
   } = useProposalTrendCategory();
+     */
+
+  const {
+    data: approvalRateCategoryData = [],
+    isLoading: isApprovalRateCategoryLoading,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    error: approvalRateCategoryError,
+  } = useApprovalRateCategory();
 
   return (
     <>
@@ -165,7 +174,6 @@ export default function OpenVis() {
               <CapitalAllocationCategory data={capitalAllocationCategoryData} />
             </DataCard>
           </section>
-          */}
 
           <hr className="border-gray-200" />
           <section className="w-full">
@@ -180,12 +188,19 @@ export default function OpenVis() {
               <ProposalTrendCategory data={proposalTrendCategoryData} />
             </DataCard>
           </section>
-          {/*
+          */}
           <hr className="border-gray-200" />
           <section className="w-full">
-            <ApprovalRateCategory />
+            <DataCard
+              title="Approval Rate by Category"
+              description="Compare approval rates across different proposal categories to identify which types of proposals have higher success rates."
+              isLoading={isApprovalRateCategoryLoading}
+            >
+              <ApprovalRateCategory data={approvalRateCategoryData} />
+            </DataCard>
           </section>
 
+          {/*
           <hr className="border-gray-200" />
           <section className="w-full">
             <ApprovalAmountCategory />
